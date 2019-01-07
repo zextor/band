@@ -1,4 +1,4 @@
-from . import band_chatbots
+import band_chatbots
 import pathlib
 from os import rename
 
