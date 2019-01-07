@@ -1,7 +1,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
-import band_chatbots
+from . import band_chatbots
 import pprint
 import pathlib
 import importlib

@@ -123,7 +123,7 @@ class ChatBot(object):
             Index = CurrentCmd[3:].strip()
             try:
                 ind = int(Index)
-                if ind in range(1, 3):
+                if ind in range(1, 4):
                     self.callback(self.links[ind])
             except:
                 pass
