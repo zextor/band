@@ -58,7 +58,7 @@ class ChatBot(object):
         self.howmistery_title_author = ""
         self.BeforeCmd = ""
         self.BeforeUser = ""
-        self.links = []
+        self.links = { 1: "등록안됨", 2: "등록안됨", 3: "등록안됨"}
 
         # drop first value
         temp = self.query_keywords()
@@ -319,7 +319,7 @@ class ChatBot(object):
                 R2 = "{}. {}".format(Index, R)
                 Means = Means + "\n" + R2
                 if len(item['link']) > 0:
-                    self.links = [Index, item['link']]
+                    self.links[Index] = item['link']
                 Index = Index + 1
                 if Index == 4:
                     break
