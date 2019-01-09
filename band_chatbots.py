@@ -128,11 +128,16 @@ class ChatBot(object):
             except:
                 pass
 
-
         elif CurrentCmd.endswith(" 책"):
             print(" {도서} ", end="")
             Book = CurrentCmd[:-2]
             T = self.get_book(CurrentUser, Book)
+            self.callback(T)
+
+        elif CurrentCmd.endswith(" 책들"):
+            print(" {저자} ", end="")
+            author = CurrentCmd[:-3]
+            T = self.get_author(CurrentUser, author)
             self.callback(T)
 
         else:
@@ -284,7 +289,7 @@ class ChatBot(object):
     def get_book(self, User, Query):
 
         ptr = Query.find(",")
-        if ptr > 0:
+        if ptr >= 0:
             title = Query[:ptr].strip()
             author = Query[ptr+1:].strip()
             URL = "https://openapi.naver.com/v1/search/book_adv.xml?display=1&start=1&d_titl=" + title+ "&d_auth=" + author
@@ -302,6 +307,34 @@ class ChatBot(object):
             ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}".format(User, Query, title, author, Price, desc)
             return ret
         return "{}님 검색결과가 없습니다.".format(User)
+
+    def get_author(self, User, author):
+        """
+            get book list writed by author
+        :param User:
+        :param Author:
+        :return: result text
+        """
+        URL = "https://openapi.naver.com/v1/search/book_adv.xml?display=15&start=1&d_auth=" + author
+        res = requests.get(URL, headers=HEADERS_NAVER_OPENAPI)
+        if res.status_code == 200:
+            ret = ""
+            s = BeautifulSoup(res.text, 'lxml')
+            total_count = s.find("total").text
+            ret += "총 {}권이 검색되었습니다.\n".format(total_count)
+            titles = s.findAll("title") # 여기는 결과제목 1개가 더 포함되어 있음
+            authors = s.findAll("author")
+            for i in range(0, 15):
+                ret += "{}. {} - {}\n".format(i+1, get_pure_text(titles[i+1].text), get_pure_text(authors[i].text))
+            if int(total_count) > 15:
+                ret += "결과가 많아 이후는 생략합니다.\n"
+
+        else:
+            return "CODE {} 발생".format(res.status_code)
+
+        return ret
+
+
 
 
     def get_dic(self, User, Word):
