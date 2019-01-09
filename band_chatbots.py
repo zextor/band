@@ -59,6 +59,7 @@ class ChatBot(object):
         self.BeforeCmd = ""
         self.BeforeUser = ""
         self.links = { 1: "등록안됨", 2: "등록안됨", 3: "등록안됨"}
+        self.active_wordchain = False
 
         # drop first value
         temp = self.query_keywords()
@@ -96,6 +97,12 @@ class ChatBot(object):
         print("명령 : {}".format(text))
 
         isProcessed = True
+
+        if self.active_wordchain:
+            token = get_pure_text(CurrentCmd)
+            if len(token) == 3:
+                T = self.wordchain(token)
+                self.callback(T)
 
         if CurrentCmd == "날씨":
             print(" {날씨} ", end="")
@@ -139,6 +146,14 @@ class ChatBot(object):
             author = CurrentCmd[:-3]
             T = self.get_author(CurrentUser, author)
             self.callback(T)
+
+        elif CurrentCmd == "끝말잇기":
+            if self.active_wordchain:
+                self.active_wordchain = False
+                self.callback("끝말잇기를 마칩니다 ^^")
+            else:
+                self.active_wordchain = True
+                self.callback("끝말잇기를 시작할께요. 먼저 시작하세요.")
 
         else:
             isProcessed = False
@@ -406,5 +421,29 @@ class ChatBot(object):
                 break
 
         return T
+
+    def wordchain(self, word):
+        """
+            끝말잇기
+        :param word:
+        :return:
+        """
+        T = "{}??".format(word[2])
+        url = "https://ko.dict.naver.com/api3/koko/search?query="+T+"&m=pc&hid=154702086874655600"
+        r = requests.get(url)
+        j = json.loads(r.text)
+        ret = []
+        for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
+            if item["meansCollector"][0]["partOfSpeech"] == "명사":
+                ret.append(tuple((item["priority"], item["handleEntry"])))
+
+        if len(ret) == 0:
+            ret = "제가 졌네요ㅠㅠ"
+            self.active_wordchain = False
+            return ret
+
+        ret.sort(reverse=True)
+        return ret[0][1]
+
 
 
