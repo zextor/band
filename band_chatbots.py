@@ -324,7 +324,7 @@ class ChatBot(object):
             ret += "총 {}권이 검색되었습니다.\n".format(total_count)
             titles = s.findAll("title") # 여기는 결과제목 1개가 더 포함되어 있음
             authors = s.findAll("author")
-            for i in range(0, 15):
+            for i in range(0, min(15, total_count)):
                 ret += "{}. {} - {}\n".format(i+1, get_pure_text(titles[i+1].text), get_pure_text(authors[i].text))
             if int(total_count) > 15:
                 ret += "결과가 많아 이후는 생략합니다.\n"
