@@ -114,10 +114,17 @@ class ChatBot(object):
                     return "'{}' 은/는 이미 사용한 명사에요!"
 
                 T = self.wordchain(token)
-                self.wordchain_last_user_answer = token
-                self.wordchain_last_bot_answer = T
-                self.wordchain_all_answers.append(token)
-                self.wordchain_all_answers.append(T)
+                if len(T) == 0:
+                    T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(CurrentUser)
+                    self.active_wordchain = False
+                    self.wordchain_last_user_answer = ""
+                    self.wordchain_last_bot_answer = ""
+                    self.wordchain_all_answers.clear()
+                else:
+                    self.wordchain_last_user_answer = token
+                    self.wordchain_last_bot_answer = T
+                    self.wordchain_all_answers.append(token)
+                    self.wordchain_all_answers.append(T)
                 return T
 
         if CurrentCmd == "날씨":
@@ -472,9 +479,7 @@ class ChatBot(object):
                 ret.append(tuple((item["priority"], item["handleEntry"])))
 
         if len(ret) == 0:
-            ret = "제가 졌네요ㅠㅠ"
-            self.active_wordchain = False
-            return ret
+            return ""
 
         for word in ret:
             if word[1] in self.wordchain_all_answers:
