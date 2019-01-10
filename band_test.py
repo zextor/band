@@ -18,14 +18,14 @@ def cb(text):
 c = band_chatbots.ChatBot()
 c.register_callback(cb)
 
-c.query_weather()
-c.query_keywords()
-c.query_new_book()
-c.query_tv_rating()
-
+#c.query_weather()
+#c.query_keywords()
+#c.query_new_book()
+#c.query_tv_rating()
 # test
 
-c.query("새로운 메세지 : 란뽀 : 끝말잇기")
-c.query("새로운 메세지 : 란뽀 : 지우개")
-c.query("새로운 메세지 : 란뽀 : 전화기")
+print(c.query("새로운 메세지 : 란뽀 : 끝말잇기"))
+print(c.query("새로운 메세지 : 란뽀 : 지우개"))
+print(c.query("새로운 메세지 : 란뽀 : 기중기"))
+print(c.query("새로운 메세지 : 란뽀 : 체근근"))
 

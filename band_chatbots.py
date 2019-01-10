@@ -60,6 +60,9 @@ class ChatBot(object):
         self.BeforeUser = ""
         self.links = { 1: "등록안됨", 2: "등록안됨", 3: "등록안됨"}
         self.active_wordchain = False
+        self.wordchain_all_answers = []
+        self.wordchain_last_user_answer = ""
+        self.wordchain_last_bot_answer = ""
 
         # drop first value
         temp = self.query_keywords()
@@ -101,8 +104,21 @@ class ChatBot(object):
         if self.active_wordchain:
             token = get_pure_text(CurrentCmd)
             if len(token) == 3:
+                if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
+                    if self.wordchain_last_bot_answer[2] != token[0]:
+                        return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
+                    if not self.is_word(token):
+                        return "'{}' 는 사전에 없는 명사네요.".format(token)
+
+                if token in self.wordchain_all_answers:
+                    return "'{}' 은/는 이미 사용한 명사에요!"
+
                 T = self.wordchain(token)
-                self.callback(T)
+                self.wordchain_last_user_answer = token
+                self.wordchain_last_bot_answer = T
+                self.wordchain_all_answers.append(token)
+                self.wordchain_all_answers.append(T)
+                return T
 
         if CurrentCmd == "날씨":
             print(" {날씨} ", end="")
@@ -153,7 +169,7 @@ class ChatBot(object):
                 self.callback("끝말잇기를 마칩니다 ^^")
             else:
                 self.active_wordchain = True
-                self.callback("끝말잇기를 시작할께요. 먼저 시작하세요.")
+                self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
         else:
             isProcessed = False
@@ -422,6 +438,21 @@ class ChatBot(object):
 
         return T
 
+    def is_word(self, word):
+        """
+            정말 단어인가
+        :param word:
+        :return:
+        """
+        url = "https://ko.dict.naver.com/api3/koko/search?query=" + word + "&m=pc&hid=154702086874655600&range=word&page=1"
+        r = requests.get(url)
+        j = json.loads(r.text)
+
+        if len(j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]) == 0:
+            return False
+
+        return True
+
     def wordchain(self, word):
         """
             끝말잇기
@@ -429,10 +460,13 @@ class ChatBot(object):
         :return:
         """
         T = "{}??".format(word[2])
-        url = "https://ko.dict.naver.com/api3/koko/search?query="+T+"&m=pc&hid=154702086874655600"
+        url = "https://ko.dict.naver.com/api3/koko/search?query="+T+"&m=pc&hid=154702086874655600&range=word&page=1"
+        #url = "https://ko.dict.naver.com/#/search?query="+T+"&range=word&page=1"
+
         r = requests.get(url)
         j = json.loads(r.text)
         ret = []
+        ret_answer = ""
         for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
             if item["meansCollector"][0]["partOfSpeech"] == "명사":
                 ret.append(tuple((item["priority"], item["handleEntry"])))
@@ -442,8 +476,14 @@ class ChatBot(object):
             self.active_wordchain = False
             return ret
 
-        ret.sort(reverse=True)
-        return ret[0][1]
+        for word in ret:
+            if word[1] in self.wordchain_all_answers:
+                continue
+            else:
+                ret_answer = word[1]
+                break
+
+        return ret_answer
 
 
 
