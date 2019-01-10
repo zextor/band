@@ -5,6 +5,7 @@ import lxml
 import re
 import html
 import pprint
+import traceback
 
 
 """
@@ -85,113 +86,116 @@ class ChatBot(object):
         :param text:
         :return: text
         """
-        pos1 = text.find(':')
-        pos2 = text.find(':', pos1 + 1)
-        CurrentUser = text[pos1 + 2:pos2 - 1]
-        CurrentCmd = text[pos2 + 2:]
+        try:
+            pos1 = text.find(':')
+            pos2 = text.find(':', pos1 + 1)
+            CurrentUser = text[pos1 + 2:pos2 - 1]
+            CurrentCmd = text[pos2 + 2:]
 
-        # 같은 메세지이면 패스
-        if self.BeforeCmd == CurrentCmd and self.BeforeUser == CurrentUser:
-            return ""
+            # 같은 메세지이면 패스
+            if self.BeforeCmd == CurrentCmd and self.BeforeUser == CurrentUser:
+                return ""
 
-        self.BeforeUser = CurrentUser
-        self.BeforeCmd = CurrentCmd
+            self.BeforeUser = CurrentUser
+            self.BeforeCmd = CurrentCmd
 
-        print("명령 : {}".format(text))
+            print("명령 : {}".format(text))
 
-        isProcessed = True
+            isProcessed = True
 
-        if self.active_wordchain:
-            token = get_pure_text(CurrentCmd)
-            if len(token) == 3:
-                if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
-                    if self.wordchain_last_bot_answer[2] != token[0]:
-                        return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
-                    if not self.is_word(token):
-                        return "'{}' 는 사전에 없는 명사네요.".format(token)
+            if self.active_wordchain:
+                token = get_pure_text(CurrentCmd)
+                if len(token) == 3:
+                    if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
+                        if self.wordchain_last_bot_answer[2] != token[0]:
+                            return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
+                        if not self.is_word(token):
+                            return "'{}' 는 사전에 없는 명사네요.".format(token)
 
-                if token in self.wordchain_all_answers:
-                    return "'{}' 은/는 이미 사용한 명사에요!"
+                    if token in self.wordchain_all_answers:
+                        return "'{}' 은/는 이미 사용한 명사에요!"
 
-                T = self.wordchain(token)
-                if len(T) == 0:
-                    T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(CurrentUser)
+                    T = self.wordchain(token)
+                    if len(T) == 0:
+                        T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(CurrentUser)
+                        self.active_wordchain = False
+                        self.wordchain_last_user_answer = ""
+                        self.wordchain_last_bot_answer = ""
+                        self.wordchain_all_answers.clear()
+                    else:
+                        self.wordchain_last_user_answer = token
+                        self.wordchain_last_bot_answer = T
+                        self.wordchain_all_answers.append(token)
+                        self.wordchain_all_answers.append(T)
+                    return T
+
+            if CurrentCmd == "날씨":
+                print(" {날씨} ", end="")
+                ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
+                self.callback(ret)
+
+            elif CurrentCmd == "뽀봇":
+                print(" {핑퐁} ", end="")
+                self.callback("네! " + CurrentUser + "님")
+
+            elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
+                print(" {시청률}", end="")
+                l = self.query_tv_rating()
+                self.callback(CurrentUser+"님 실시간 시청율입니다.")
+                self.callback(l)
+
+            elif CurrentCmd.endswith(" 뜻"):
+                print(" {사전} ", end="")
+                Word = CurrentCmd[:-2]
+                T = self.get_dic(CurrentUser, Word)
+                self.callback(T)
+
+            elif CurrentCmd.startswith("더보기"):
+                print(" {사전:더보기} ", end="")
+                Index = CurrentCmd[3:].strip()
+                try:
+                    ind = int(Index)
+                    if ind in range(1, 4):
+                        self.callback(self.links[ind])
+                except:
+                    pass
+
+            elif CurrentCmd.endswith(" 책"):
+                print(" {도서} ", end="")
+                Book = CurrentCmd[:-2]
+                T = self.get_book(CurrentUser, Book)
+                self.callback(T)
+
+            elif CurrentCmd.endswith(" 책들"):
+                print(" {저자} ", end="")
+                author = CurrentCmd[:-3]
+                T = self.get_author(CurrentUser, author)
+                self.callback(T)
+
+            elif CurrentCmd == "끝말잇기":
+                print("{끝말잇기}", end="")
+                if self.active_wordchain:
+                    print("{종료루틴}", end="")
                     self.active_wordchain = False
                     self.wordchain_last_user_answer = ""
                     self.wordchain_last_bot_answer = ""
                     self.wordchain_all_answers.clear()
+                    self.callback("끝말잇기를 마칩니다 ^^")
                 else:
-                    self.wordchain_last_user_answer = token
-                    self.wordchain_last_bot_answer = T
-                    self.wordchain_all_answers.append(token)
-                    self.wordchain_all_answers.append(T)
-                return T
+                    print("{시작루틴}", end="")
+                    self.active_wordchain = True
+                    self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
-        if CurrentCmd == "날씨":
-            print(" {날씨} ", end="")
-            ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
-            self.callback(ret)
-
-        elif CurrentCmd == "뽀봇":
-            print(" {핑퐁} ", end="")
-            self.callback("네! " + CurrentUser + "님")
-
-        elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
-            print(" {시청률}", end="")
-            l = self.query_tv_rating()
-            self.callback(CurrentUser+"님 실시간 시청율입니다.")
-            self.callback(l)
-
-        elif CurrentCmd.endswith(" 뜻"):
-            print(" {사전} ", end="")
-            Word = CurrentCmd[:-2]
-            T = self.get_dic(CurrentUser, Word)
-            self.callback(T)
-
-        elif CurrentCmd.startswith("더보기"):
-            print(" {사전:더보기} ", end="")
-            Index = CurrentCmd[3:].strip()
-            try:
-                ind = int(Index)
-                if ind in range(1, 4):
-                    self.callback(self.links[ind])
-            except:
-                pass
-
-        elif CurrentCmd.endswith(" 책"):
-            print(" {도서} ", end="")
-            Book = CurrentCmd[:-2]
-            T = self.get_book(CurrentUser, Book)
-            self.callback(T)
-
-        elif CurrentCmd.endswith(" 책들"):
-            print(" {저자} ", end="")
-            author = CurrentCmd[:-3]
-            T = self.get_author(CurrentUser, author)
-            self.callback(T)
-
-        elif CurrentCmd == "끝말잇기":
-            print("{끝말잇기}", end="")
-            if self.active_wordchain:
-                print("{종료루틴}", end="")
-                self.active_wordchain = False
-                self.wordchain_last_user_answer = ""
-                self.wordchain_last_bot_answer = ""
-                self.wordchain_all_answers.clear()
-                self.callback("끝말잇기를 마칩니다 ^^")
             else:
-                print("{시작루틴}", end="")
-                self.active_wordchain = True
-                self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
+                isProcessed = False
+                print("Bypass")
 
-        else:
-            isProcessed = False
-            print("Bypass")
+            if isProcessed:
+                print("Processed")
 
-        if isProcessed:
-            print("Processed")
-
-        return ""
+            return ""
+        except:
+            print(traceback.print_exc())
 
 
     def query_new_book(self):
@@ -487,11 +491,11 @@ class ChatBot(object):
         if len(ret) == 0:
             return ""
 
-        for word in ret:
-            if word[1] in self.wordchain_all_answers:
+        for item in ret:
+            if item[1] in self.wordchain_all_answers:
                 continue
             else:
-                ret_answer = word[1]
+                ret_answer = item[1]
                 if ret_answer[0] == word[2]:
                     break
                 else:
