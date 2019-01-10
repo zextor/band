@@ -174,6 +174,9 @@ class ChatBot(object):
             if self.active_wordchain:
                 self.active_wordchain = False
                 self.callback("끝말잇기를 마칩니다 ^^")
+                self.wordchain_last_user_answer = ""
+                self.wordchain_last_bot_answer = ""
+                self.wordchain_all_answers.clear()
             else:
                 self.active_wordchain = True
                 self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
