@@ -171,13 +171,16 @@ class ChatBot(object):
             self.callback(T)
 
         elif CurrentCmd == "끝말잇기":
+            print("{끝말잇기}", end="")
             if self.active_wordchain:
+                print("{종료루틴}", end="")
                 self.active_wordchain = False
-                self.callback("끝말잇기를 마칩니다 ^^")
                 self.wordchain_last_user_answer = ""
                 self.wordchain_last_bot_answer = ""
                 self.wordchain_all_answers.clear()
+                self.callback("끝말잇기를 마칩니다 ^^")
             else:
+                print("{시작루틴}", end="")
                 self.active_wordchain = True
                 self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
@@ -489,7 +492,13 @@ class ChatBot(object):
                 continue
             else:
                 ret_answer = word[1]
-                break
+                if ret_answer[0] == word[2]:
+                    break
+                else:
+                    continue
+
+        if len(ret_answer) == 0:
+            return ""
 
         return ret_answer
 

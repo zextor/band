@@ -25,7 +25,7 @@ c.register_callback(cb)
 # test
 
 print(c.query("새로운 메세지 : 란뽀 : 끝말잇기"))
-print(c.query("새로운 메세지 : 란뽀 : 지우개"))
+print(c.query("새로운 메세지 : 란뽀 : 아랫녘"))
 print(c.query("새로운 메세지 : 란뽀 : 기중기"))
 print(c.query("새로운 메세지 : 란뽀 : 체근근"))
 
