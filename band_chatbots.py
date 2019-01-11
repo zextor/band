@@ -476,20 +476,29 @@ class ChatBot(object):
         :param word:
         :return:
         """
-        T = "{}??".format(word[2])
-        url = "https://ko.dict.naver.com/api3/koko/search?query="+T+"&m=pc&hid=154702086874655600&range=word&page=1"
-        #url = "https://ko.dict.naver.com/#/search?query="+T+"&range=word&page=1"
-
-        r = requests.get(url)
-        j = json.loads(r.text)
         ret = []
         ret_answer = ""
-        for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
-            if item["meansCollector"][0]["partOfSpeech"] == "명사":
-                ret.append(tuple((item["priority"], item["handleEntry"])))
+        try_num = 1
+        T = "{}??".format(word[2])
 
-        if len(ret) == 0:
-            return ""
+        while True:
+            url = "https://ko.dict.naver.com/api3/koko/search?query={}&m=pc&hid=154702086874655600&range=word&page={}".format(T, try_num)
+
+            r = requests.get(url)
+            j = json.loads(r.text)
+
+            for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
+                if item["meansCollector"][0]["partOfSpeech"] == "명사":
+                    if len(item["handleEntry"]) == 3:
+                        ret.append(tuple((item["priority"], item["handleEntry"])))
+
+            if len(ret) == 0:
+                try_num = try_num + 1
+            else:
+                break
+
+            if try_num == 4:
+                return ""
 
         for item in ret:
             if item[1] in self.wordchain_all_answers:
