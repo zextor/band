@@ -186,6 +186,14 @@ class ChatBot(object):
                     self.active_wordchain = True
                     self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
+            elif CurrentCmd.endswith("="):
+                math = CurrentCmd[:-1]
+                exp = math.strip()
+                result = re.compile(r"^([-+/*.\(\)\d])*").match(exp)
+                if result.group() == exp:
+                    answer = eval(exp)
+                    return "{}".format(answer)
+
             else:
                 isProcessed = False
                 print("Bypass")
