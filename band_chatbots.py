@@ -113,7 +113,7 @@ class ChatBot(object):
                             return "'{}' 는 사전에 없는 명사네요.".format(token)
 
                     if token in self.wordchain_all_answers:
-                        return "'{}' 은/는 이미 사용한 명사에요!"
+                        return "'{}' 은/는 이미 사용한 명사에요!".format(token)
 
                     T = self.wordchain(token)
                     if len(T) == 0:
