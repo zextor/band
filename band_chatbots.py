@@ -198,8 +198,12 @@ class ChatBot(object):
             elif CurrentCmd.endswith("="):
                 math = CurrentCmd[:-1]
                 exp = math.strip()
+                exp = exp.replace("÷", "/")
+                exp = exp.replace("×", "*")
                 result = re.compile(r"^([-+/*.\(\)\d])*").match(exp)
-                if result.group() == exp:
+                g = result.group()
+                eq = result.group() == exp
+                if eq:
                     answer = eval(exp)
                     return "{}".format(answer)
 
