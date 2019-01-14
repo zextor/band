@@ -272,19 +272,36 @@ class ChatBot(object):
             return rv
         return None
 
+    def alert(self, value):
+        """
+            미세먼지 알람
+        :return:
+        """
+        v = int(value)
+        if  v > 151:
+            return "매우나쁨"
+        if v > 80:
+            return "나쁨"
+        if v > 30:
+            return "보통"
+        return "좋음"
+
     def query_weather(self):
         """
             return text about weather
         :return:
         """
         l = self.get_weather_from_naver();
-        r = ""
-        while l:
-            T = "{2} {1} {0}".format(l.pop(), l.pop(), l.pop())
-            if len(r) == 0:
-                r = T
-            else:
-                r = r + "\n" + T
+        r = "현재 날씨 입니다.\n"
+
+
+        r += "서울:{}({}°C),미세먼지 {}({})\n".format(l["서울"][1]['구름'],l["서울"][0]['온도'], self.alert(l["서울"][2]["미세먼지"]),l["서울"][2]["미세먼지"])
+        r += "경기/수원:{}({}°C),미세먼지 {}({})\n".format(l["수원"][1]['구름'], l["수원"][0]['온도'], self.alert(l["수원"][2]["미세먼지"]), l["수원"][2]["미세먼지"])
+        r += "강원/춘천:{} {}°C,미세먼지 {}({})\n".format(l["춘천"][1]['구름'], l["춘천"][0]['온도'], self.alert(l["춘천"][2]["미세먼지"]), l["춘천"][2]["미세먼지"])
+        r += "대구:{} {}°C,미세먼지 {}({})\n".format(l["대구"][1]['구름'], l["대구"][0]['온도'], self.alert(l["대구"][2]["미세먼지"]), l["대구"][2]["미세먼지"])
+        r += "광주/목포:{} {}°C,미세먼지 {}({})\n".format(l["목포"][1]['구름'], l["목포"][0]['온도'], self.alert(l["목포"][2]["미세먼지"]), l["목포"][2]["미세먼지"])
+        r += "부산:{} {}°C,미세먼지 {}({})\n".format(l["부산"][1]['구름'], l["부산"][0]['온도'], self.alert(l["부산"][2]["미세먼지"]), l["부산"][2]["미세먼지"])
+
         return r
 
     @property
@@ -334,28 +351,72 @@ class ChatBot(object):
         URL = "http://m.search.naver.com/search.naver?query=전국날씨&where=m&sm=mtp_sug.top&qdt=0&acq=전국날씨&acr=1"
         res = requests.get(URL, headers=HEADERS_FOR_NAVER)
         soup = BeautifulSoup(res.text, 'lxml')
-        ptr =  soup.find('span', { 'class' : 'lcl_name' } )
-        result = []
-        target = [ "서울", "대구", "목포", "부산", "춘천"]
-        while True:
-            isIn = False
-            if not ptr:                     # 도시
-                break
 
+        ptr =  soup.find('span', { 'class' : 'lcl_name' } )
+        target  = ["서울", "수원", "대구", "목포", "부산", "춘천"]
+        target1 = ["서울", "경기", "대구", "광주", "부산", "강원"]
+        city = ""
+        result_new = dict()
+        while True:
+            is_include_city = False
+            if not ptr: # 도시
+                break
+            print("{} ".format(ptr.text))
             if ptr.text in target:
-                isIn = True
-                result.append(ptr.text)
+                is_include_city = True
+                city = ptr.text
             else:
-                isIn = False
+                is_include_city = False
 
             ptr = ptr.findNext('span')      # 온도
-            if isIn:
-                result.append(ptr.text)
+            if is_include_city:
+                temp = { "온도" :  ptr.contents[0] }
+
             ptr = ptr.findNext('span', { 'class' : 'ico_status2'})
-            if isIn:
-                result.append(ptr.text)
+            if is_include_city:
+                cloud = { "구름" : ptr.text }
+                result_new[city] = [ temp, cloud ]
+
             ptr = ptr.findNext('span', { 'class' : 'lcl_name' })
-        return result
+
+        print("\n미세먼지\n")
+
+
+        URL_dirsty = "https://m.search.naver.com/search.naver?query=전국+미세먼지&sm=mtb_hty.top&where=m&oquery=미세먼지&tqi=UvwkUlpVuq8ssbfb9f8ssssstVZ-333588"
+        res_d = requests.get(URL_dirsty, headers=HEADERS_FOR_NAVER)
+        soup_d = BeautifulSoup(res_d.text, 'lxml')
+        ptr = soup_d.find('span', {'class': 'lcl_name'})
+
+        """
+            경기>수원 광주>목포 강원>춘천 에 넣어야 함
+            
+        """
+        while True:
+            is_in = False
+
+            if not ptr:
+                break
+
+            if ptr.text in target1:
+                is_in = True
+                if ptr.text == "경기":
+                    city = "수원"
+                elif ptr.text == "광주":
+                    city = "목포"
+                elif ptr.text == "강원":
+                    city = "춘천"
+                else:
+                    city = ptr.text
+
+            ptr = ptr.findNext('span') #미세먼지
+            if is_in:
+                result_new[city].append( { "미세먼지": ptr.text } )
+                if city == "목포":
+                    break
+
+            ptr = ptr.findNext('span', {'class': 'lcl_name'})
+
+        return result_new
 
     def get_book(self, User, Query):
 
