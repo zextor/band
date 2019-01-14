@@ -51,6 +51,7 @@ class ChatBot(object):
         """
         self.init = True
         self.callback = None
+        self.refresh = None
         self.keywords_before = set("empty_set")
         self.rank_format = "\n1위: {}\n2위: {}\n3위: {}"
         self.rank = ""
@@ -71,6 +72,14 @@ class ChatBot(object):
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
+
+    def register_refresh(self, func):
+        """
+            register refresh function
+        :param func:
+        :return:
+        """
+        self.refresh = func
 
     def register_callback(self, func):
         """
@@ -394,26 +403,33 @@ class ChatBot(object):
 
 
     def get_dic(self, User, Word):
+        """
+            사전적 의미
+        :param User:
+        :param Word:
+        :return:
+        """
+        url = "https://ko.dict.naver.com/api3/koko/search?query={}&m=pc&hid=154702086874655600&range=word&page=1".format(Word)
 
-        URL = "https://openapi.naver.com/v1/search/encyc.json?query=" + Word
-        res = requests.get(URL, headers=HEADERS_NAVER_OPENAPI)
-        data = json.loads(res.text)
+        r = requests.get(url)
+        j = json.loads(r.text)
 
-        if data['display'] > 0:
-            Means = "{}님 {}의 검색결과 입니다.".format(User, Word)
-            Index = 1
-            for item in data['items']:
-                Text = item['description']
-                R = get_pure_text(Text)
-                R2 = "{}. {}".format(Index, R)
-                Means = Means + "\n" + R2
-                if len(item['link']) > 0:
-                    self.links[Index] = item['link']
-                Index = Index + 1
-                if Index == 4:
-                    break
+        result = "{}님 {}의 사전적 뜻입니다.\n".format(User, Word)
 
-            return Means
+        index = 1
+        for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
+
+            if item["handleEntry"] == Word:
+                for mean in item["meansCollector"]:
+                    result += "{}.{} ({})\n".format(index, mean["partOfSpeech"], item["sourceDictnameKO"])
+
+                    for value in mean["means"]:
+                        result += " - {}\n".format(get_pure_text(value["value"]))
+            index = index + 1
+
+        if len(result) > 0:
+            return result
+
         return "{}님 검색결과가 없습니다.".format(User)
 
     def get_tv_rating(self):

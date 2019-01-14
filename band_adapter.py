@@ -13,6 +13,19 @@ import schedule
 """
 REFRESH_INTERVAL = 5.0
 
+def refresh():
+    """
+        refresh chrome browser
+    :return:
+    """
+    driver.refresh()
+
+def get_driver():
+    """
+        return webdriver instance
+    :return: webdriver
+    """
+    return driver
 
 def send_message(text):
     """
@@ -45,7 +58,7 @@ def get_new_message():
 
 
 def alarm_new_book():
-    send_message(c.query_new_book())
+    send_message(c.query_new_book(driver))
 
 
 def alarm_weather():
@@ -67,8 +80,10 @@ if __name__ == '__main__':
 
     c = band_chatbots.ChatBot()
     c.register_callback(send_message)
+    c.register_refresh(refresh)
 
     schedule.every().hour.do(alarm_new_book)
+    schedule.every().day.at("05:30").do(refresh)
     schedule.every().day.at("07:30").do(alarm_weather)
     schedule.every().day.at("08:00").do(send_message, "좋은 하루 보내세요~ ❤")
     schedule.every().day.at("12:00").do(send_message, "점심 맛있게 드세요~ ❤")
