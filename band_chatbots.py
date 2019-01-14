@@ -414,8 +414,9 @@ class ChatBot(object):
         r = requests.get(url)
         j = json.loads(r.text)
 
-        result = "{}님 {}의 사전적 뜻입니다.\n".format(User, Word)
+        result = "{}님 '{}'의 사전 내용입니다.\n".format(User, Word)
 
+        found = False
         index = 1
         for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
 
@@ -427,12 +428,15 @@ class ChatBot(object):
 
                     for value in mean["means"]:
                         result += " - {}\n".format(get_pure_text(value["value"]))
+
+                    found = True
+
             index = index + 1
 
-        if len(result) > 0:
+        if found:
             return result
 
-        return "{}님 검색결과가 없습니다.".format(User)
+        return "{}님 '{}'는 사전에 없습니다.".format(User, Word)
 
     def get_tv_rating(self):
         """
