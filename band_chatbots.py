@@ -419,7 +419,9 @@ class ChatBot(object):
         index = 1
         for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
 
-            if item["handleEntry"] == Word:
+            a = get_pure_text(item["handleEntry"])
+            b = get_pure_text(Word)
+            if a.replace(" ", "") == b.replace(" ", ""):
                 for mean in item["meansCollector"]:
                     result += "{}.{} ({})\n".format(index, mean["partOfSpeech"], item["sourceDictnameKO"])
 
