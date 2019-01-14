@@ -200,6 +200,8 @@ class ChatBot(object):
                 exp = math.strip()
                 exp = exp.replace("÷", "/")
                 exp = exp.replace("×", "*")
+                exp = exp.replace("{", "(")
+                exp = exp.replace("}", ")")
                 result = re.compile(r"^([-+/*.\(\)\d])*").match(exp)
                 g = result.group()
                 eq = result.group() == exp
