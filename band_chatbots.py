@@ -8,6 +8,7 @@ import pickle
 import requests
 import traceback
 import linecache
+from time import sleep
 from bs4 import BeautifulSoup
 
 
@@ -363,7 +364,9 @@ class ChatBot(object):
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_intro+"\n\n")
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_story+"\n\n")
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_publisher+"\n\n")
-                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(image_url+"\n\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(image_url+"\n")
+                    sleep(1)
+
                     # commit
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
                     driver.switch_to_window(driver.window_handles[0])
