@@ -279,6 +279,8 @@ class ChatBot(object):
 
     def get_howmistery_new_book(self):
 
+        keywords = ""
+
         with open('last_book.dic', 'rb') as f:
             last_book = pickle.load(f)
 
