@@ -1,11 +1,13 @@
-from bs4 import BeautifulSoup
-import requests
+import re
+import sys
+import html
 import json
 import lxml
-import re
-import html
 import pprint
+import requests
 import traceback
+import linecache
+from bs4 import BeautifulSoup
 
 
 """
@@ -159,8 +161,8 @@ class ChatBot(object):
 
             elif CurrentCmd == "뽀봇 느려":
                 print("{브라우저갱신}", end="")
-                self.refresh()
                 self.sendmessage("{}님! 더 빨리 대답할께요ㅠ".format(CurrentUser))
+                self.refresh()
 
             elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
                 print(" {시청률}", end="")
@@ -233,8 +235,14 @@ class ChatBot(object):
 
             return ""
         except:
+            exc_type, exc_obj, tb = sys.exc_info()
+            f = tb.tb_frame
+            lineno = tb.tb_lineno
+            filename = f.f_code.co_filename
+            linecache.checkcache(filename)
+            line = linecache.getline(filename, lineno, f.f_globals)
+            print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
             print(traceback.print_exc())
-
 
     def query_new_book(self, driver):
         """
