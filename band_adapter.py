@@ -89,12 +89,17 @@ if __name__ == '__main__':
     input("Enter after login process...")
 
     schedule.every().hour.do(alarm_new_book)
-    schedule.every().day.at("05:30").do(refresh)
+    # 브라우저 갱신
+    schedule.every().day.at("06:30").do(refresh)
+    schedule.every().day.at("12:30").do(refresh)
+    # 아침 날씨 브리핑
     schedule.every().day.at("07:30").do(alarm_weather)
+    # 끼니 인사
     schedule.every().day.at("08:00").do(send_message, "좋은 하루 보내세요~ ❤")
     schedule.every().day.at("12:00").do(send_message, "점심 맛있게 드세요~ ❤")
     schedule.every().day.at("18:00").do(send_message, "여유로운 저녁 보내세요~ ❤")
     schedule.every().day.at("23:00").do(send_message, "고운밤 되세요~ ❤")
+    # 세상 돌아가는 이야기
     schedule.every().day.at("00:00").do(alarm_keywords)
     schedule.every().day.at("06:00").do(alarm_keywords)
     schedule.every().day.at("09:00").do(alarm_keywords)

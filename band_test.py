@@ -24,10 +24,10 @@ c.register_callback_sendmessage(cb)
 #c.query_tv_rating()
 # test
 
-print(c.query("새로운 메세지 : 란뽀 : 날씨"))
+print(c.query("새로운 메세지 : 란뽀 : 끝말잇기"))
+print(c.query("새로운 메세지 : 란뽀 : 기울기"))
+#print(c.query("새로운 메세지 : 란뽀 : 날씨"))
 #print(c.query("새로운 메세지 : 란뽀 :  2800*0.6 ="))
-#print(c.query("새로운 메세지 : 란뽀 : 끝말잇기"))
-#print(c.query("새로운 메세지 : 란뽀 : 기울기"))
 #print(c.query("새로운 메세지 : 란뽀 : 기중기"))
 #print(c.query("새로운 메세지 : 란뽀 : 기울기"))
 #print(c.query("새로운 메세지 : 란뽀 : 기중기"))

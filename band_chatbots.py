@@ -69,7 +69,7 @@ class ChatBot(object):
 
         # drop first value
         temp = self.query_keywords()
-        temp = self.query_new_book()
+        temp = self.query_new_book(None)
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
@@ -127,8 +127,9 @@ class ChatBot(object):
                     if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
                         if self.wordchain_last_bot_answer[2] != token[0]:
                             return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
-                        if not self.is_word(token):
-                            return "'{}' 는 사전에 없는 명사네요.".format(token)
+
+                    if not self.is_word(token):
+                        return "'{}' 는 사전에 없는 명사네요.".format(token)
 
                     if token in self.wordchain_all_answers:
                         return "'{}' 은/는 이미 사용한 명사에요!".format(token)
@@ -148,13 +149,18 @@ class ChatBot(object):
                     return T
 
             if CurrentCmd == "날씨":
-                print(" {날씨} ", end="")
+                print("{날씨}", end="")
                 ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
                 self.sendmessage(ret)
 
             elif CurrentCmd == "뽀봇":
-                print(" {핑퐁} ", end="")
+                print("{핑퐁}", end="")
                 self.sendmessage("네! " + CurrentUser + "님")
+
+            elif CurrentCmd == "뽀봇 느려":
+                print("{브라우저갱신}", end="")
+                self.refresh()
+                self.sendmessage("{}님! 더 빨리 대답할께요ㅠ".format(CurrentUser))
 
             elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
                 print(" {시청률}", end="")
@@ -574,7 +580,13 @@ class ChatBot(object):
         if len(j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]) == 0:
             return False
 
-        return True
+        for item in j["searchResultMap"]["searchResultListMap"]["WORD"]["items"]:
+            a = get_pure_text(item["handleEntry"])
+            b = get_pure_text(word)
+            if a.replace(" ", "") == b.replace(" ", ""):
+                return True
+
+        return False
 
     def wordchain(self, word):
         """
