@@ -16,7 +16,7 @@ def cb(text):
 
 
 c = band_chatbots.ChatBot()
-c.register_callback(cb)
+c.register_callback_sendmessage(cb)
 
 #c.query_weather()
 #c.query_keywords()

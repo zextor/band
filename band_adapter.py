@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import time
 import band_chatbots
@@ -72,15 +73,20 @@ def alarm_keywords():
 if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
+    print("Webdriver : ", driver)
     driver.get('https://band.us/band/73188261/chat/CL1Vt8')
-    input("Enter after login process...")
 
     new_message = None
     old_message = None
 
     c = band_chatbots.ChatBot()
-    c.register_callback(send_message)
-    c.register_refresh(refresh)
+    c.register_callback_sendmessage(send_message)
+    c.register_callback_refresh(refresh)
+    c.register_callback_getdriver(get_driver)
+
+    print(driver.current_window_handle)
+
+    input("Enter after login process...")
 
     schedule.every().hour.do(alarm_new_book)
     schedule.every().day.at("05:30").do(refresh)
@@ -103,10 +109,7 @@ if __name__ == '__main__':
 
         try:
             # get new message
-            time_before = time.time()
             new_message = get_new_message()
-            time_after = time.time()
-            elapsed = time_after - time_before
 
             if len(new_message) > 0:
                 # if new message
@@ -115,19 +118,15 @@ if __name__ == '__main__':
                     send_message(reply)
                     old_message = new_message
 
-            if elapsed > REFRESH_INTERVAL:
-                print("elapse time is {}".format(elapsed))
-                driver.refresh()
-            """
-                len(driver.page_source) = 405146, if bigger than 1000000
-            
-            """
             if pathlib.Path("update.now").is_file():
                 importlib.reload(band_chatbots)
                 c = band_chatbots.ChatBot()
-                c.register_callback(send_message)
+                c.register_callback_sendmessage(send_message)
+                c.register_callback_refresh(refresh)
+                c.register_callback_getdriver(get_driver)
+
                 rename("update.now", "update.complete(change .now for reload)")
-                print("module chatbot reload completed.")
+                print("Module chatbot Reload Completed!")
 
             # sleep interval 1 sec
             schedule.run_pending()

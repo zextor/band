@@ -50,8 +50,9 @@ class ChatBot(object):
             for init class
         """
         self.init = True
-        self.callback = None
+        self.sendmessage = None
         self.refresh = None
+        self.getdriver = None
         self.keywords_before = set("empty_set")
         self.rank_format = "\n1위: {}\n2위: {}\n3위: {}"
         self.rank = ""
@@ -73,7 +74,15 @@ class ChatBot(object):
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
 
-    def register_refresh(self, func):
+    def register_callback_getdriver(self, func):
+        """
+            register get driver
+        :param func:
+        :return:
+        """
+        self.getdriver = func
+
+    def register_callback_refresh(self, func):
         """
             register refresh function
         :param func:
@@ -81,13 +90,13 @@ class ChatBot(object):
         """
         self.refresh = func
 
-    def register_callback(self, func):
+    def register_callback_sendmessage(self, func):
         """
             register callback function
         :func       function for call back
         :return:
         """
-        self.callback = func
+        self.sendmessage = func
 
     def query(self, text):
         """
@@ -141,23 +150,23 @@ class ChatBot(object):
             if CurrentCmd == "날씨":
                 print(" {날씨} ", end="")
                 ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
-                self.callback(ret)
+                self.sendmessage(ret)
 
             elif CurrentCmd == "뽀봇":
                 print(" {핑퐁} ", end="")
-                self.callback("네! " + CurrentUser + "님")
+                self.sendmessage("네! " + CurrentUser + "님")
 
             elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
                 print(" {시청률}", end="")
                 l = self.query_tv_rating()
-                self.callback(CurrentUser+"님 실시간 시청율입니다.")
-                self.callback(l)
+                self.sendmessage(CurrentUser + "님 실시간 시청율입니다.")
+                self.sendmessage(l)
 
             elif CurrentCmd.endswith(" 뜻"):
                 print(" {사전} ", end="")
                 Word = CurrentCmd[:-2]
                 T = self.get_dic(CurrentUser, Word)
-                self.callback(T)
+                self.sendmessage(T)
 
             elif CurrentCmd.startswith("더보기"):
                 print(" {사전:더보기} ", end="")
@@ -165,7 +174,7 @@ class ChatBot(object):
                 try:
                     ind = int(Index)
                     if ind in range(1, 4):
-                        self.callback(self.links[ind])
+                        self.sendmessage(self.links[ind])
                 except:
                     pass
 
@@ -173,13 +182,13 @@ class ChatBot(object):
                 print(" {도서} ", end="")
                 Book = CurrentCmd[:-2]
                 T = self.get_book(CurrentUser, Book)
-                self.callback(T)
+                self.sendmessage(T)
 
             elif CurrentCmd.endswith(" 책들"):
                 print(" {저자} ", end="")
                 author = CurrentCmd[:-3]
                 T = self.get_author(CurrentUser, author)
-                self.callback(T)
+                self.sendmessage(T)
 
             elif CurrentCmd == "끝말잇기":
                 print("{끝말잇기}", end="")
@@ -189,11 +198,11 @@ class ChatBot(object):
                     self.wordchain_last_user_answer = ""
                     self.wordchain_last_bot_answer = ""
                     self.wordchain_all_answers.clear()
-                    self.callback("끝말잇기를 마칩니다 ^^")
+                    self.sendmessage("끝말잇기를 마칩니다 ^^")
                 else:
                     print("{시작루틴}", end="")
                     self.active_wordchain = True
-                    self.callback("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
+                    self.sendmessage("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
             elif CurrentCmd.endswith("="):
                 math = CurrentCmd[:-1]
@@ -221,7 +230,7 @@ class ChatBot(object):
             print(traceback.print_exc())
 
 
-    def query_new_book(self):
+    def query_new_book(self, driver):
         """
             return text about new kyobo, howmistery book
         :return:
