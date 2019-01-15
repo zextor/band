@@ -4,6 +4,7 @@ import html
 import json
 import lxml
 import pprint
+import pickle
 import requests
 import traceback
 import linecache
@@ -71,7 +72,7 @@ class ChatBot(object):
 
         # drop first value
         temp = self.query_keywords()
-        temp = self.query_new_book(None)
+        #temp = self.query_new_book(None) #필요없음
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
@@ -250,13 +251,13 @@ class ChatBot(object):
         :return:
         """
         ret = ""
-        rv = self.get_kyobo_new_book()
-        if len(rv) != 0:
-            if self.kyobo_title != rv[0]:
-                text = "교보문고에 새 추리소설이 등록되었습니다.\n제목 : {}, 저자 : {}\n".format(rv[0], rv[1])
-                self.kyobo_title = rv[0]
-                self.kyobo_author = rv[1]
-                ret = ret + text
+        # rv = self.get_kyobo_new_book()
+        # if len(rv) != 0:
+        #     if self.kyobo_title != rv[0]:
+        #         text = "교보문고에 새 추리소설이 등록되었습니다.\n제목 : {}, 저자 : {}\n".format(rv[0], rv[1])
+        #         self.kyobo_title = rv[0]
+        #         self.kyobo_author = rv[1]
+        #         ret = ret + text
 
         rv = self.get_howmistery_new_book()
         if len(rv) != 0:
@@ -265,9 +266,22 @@ class ChatBot(object):
                 self.howmistery_title_author = rv
                 ret = ret + text
 
+
+        """
+            driver.switch_to_window(driver.window_handles[1])
+            driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
+            driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("여기에 글을 적습니다.\n여러가지")
+            driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
+            driver.switch_to_window(driver.window_handles[0])
+
+        """
         return ret
 
     def get_howmistery_new_book(self):
+
+        with open('last_book.dic', 'rb') as f:
+            last_book = pickle.load(f)
+
         URL = "http://www.howmystery.com/newrelease"
         res = requests.get(URL)
         soup = BeautifulSoup(res.text, 'lxml')
@@ -275,8 +289,98 @@ class ChatBot(object):
         s = d.findNext('li')
         s = s.find('p')
         s = s.find('b')
-        text = s.text
-        return text
+        delimeter = ":"
+        if s.text.find(":") < 0:
+            delimeter = ","
+        pair = s.text.split(":")
+        new_books = [{"title":pair[0].strip(), "author":pair[1].strip()}]
+
+        while True:
+            if new_books[len(new_books)-1]["title"] == last_book["title"]:
+                break
+
+            s = s.findNext('li')
+            s = s.find('p')
+            s = s.find('b')
+            delimeter = ":"
+            if s.text.find(":") < 0:
+                delimeter = ","
+            pair = s.text.split(delimeter)
+            new_books.append({"title":pair[0].strip(), "author":pair[1].strip()})
+
+        # delete last book
+
+        for index in range(len(new_books)-2, -1, -1): # range(5,-1,-1)
+            book = new_books[index]
+
+            keywords = "{} {}".format(book["title"], book["author"])
+
+            url = "https://www.aladin.co.kr/m/msearch.aspx?SearchTarget=Book&KeyWord={}&KeyRecentPublish=0&OutStock=0&ViewType=Detail" \
+                  "&SortOrder=5&CustReviewCount=0&CustReviewRank=0&KeyFullWord={}&KeyLastWord={}&CategorySearch=" \
+                  "&MViewType=".format(keywords, keywords, keywords)
+            r = requests.get(url)
+            s = BeautifulSoup(r.text, 'lxml')
+            div = s.find("div", { "class" : "browse_list_box" })
+            anchors = div.findAll("a")
+            if anchors[0]["href"].find("mproduct") > 0:
+                try:
+                    url = anchors[0]["href"]
+                    r = requests.get(url)
+                    s = BeautifulSoup(r.text, 'lxml')
+                    image = s.find("img", { "class" : "coversize"})
+                    image_url = image["src"]
+                    image_url = "http:" + image_url
+
+                    intro = s.find("div", {"id":"introduce_all"})
+                    story = s.find("div", {"id":"Story_all"})
+                    publisher = s.find("div", {"id":"Publisher_all"})
+
+                    if intro is None:
+                        p_intro = ""
+                    else:
+                        p_intro = intro.text
+
+                    if story is None:
+                        p_story = ""
+                    else:
+                        p_story = story.text
+
+                    if publisher is None:
+                        p_publisher = ""
+                    else:
+                        p_publisher = publisher.text
+
+                    driver = self.getdriver()
+                    driver.switch_to_window(driver.window_handles[1])
+                    # begin write
+                    driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
+                    # contents
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("#신간\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("{} - {}\n\n".format(book["title"], book["author"]))
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_intro+"\n\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_story+"\n\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_publisher+"\n\n")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(image_url+"\n\n")
+                    # commit
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
+                    driver.switch_to_window(driver.window_handles[0])
+
+                    with open('last_book.dic', 'wb') as f:
+                        pickle.dump(book, f)
+
+                except:
+                    exc_type, exc_obj, tb = sys.exc_info()
+                    f = tb.tb_frame
+                    lineno = tb.tb_lineno
+                    filename = f.f_code.co_filename
+                    linecache.checkcache(filename)
+                    line = linecache.getline(filename, lineno, f.f_globals)
+                    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
+                    print(traceback.print_exc())
+                    continue
+
+        return keywords
 
     def get_kyobo_new_book(self):
         URL = "http://www.kyobobook.co.kr/categoryRenewal/categoryMain.laf?linkClass=011504&mallGb=KOR&orderClick=JAR"
