@@ -263,7 +263,7 @@ class ChatBot(object):
         rv = self.get_howmistery_new_book()
         if len(rv) != 0:
             if self.howmistery_title_author != rv:
-                text = "하우미스터리에 새 추리소설이 등록되었습니다.\n{}".format(rv)
+                text = "신간 소식이 있습니다.\n{}".format(rv)
                 self.howmistery_title_author = rv
                 ret = ret + text
 
