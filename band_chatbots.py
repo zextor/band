@@ -5,6 +5,7 @@ import json
 import lxml
 import pprint
 import pickle
+import pathlib
 import requests
 import traceback
 import linecache
@@ -157,6 +158,10 @@ class ChatBot(object):
                 ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
                 self.sendmessage(ret)
 
+            elif CurrentCmd == "캡쳐":
+                print("{캡쳐}", end="")
+                self.capture_screen()
+
             elif CurrentCmd == "뽀봇":
                 print("{핑퐁}", end="")
                 self.sendmessage("네! " + CurrentUser + "님")
@@ -236,10 +241,10 @@ class ChatBot(object):
 
             else:
                 isProcessed = False
-                print("Bypass")
+                print("{Bypass}")
 
             if isProcessed:
-                print("Processed")
+                print("{Processed}")
 
             return ""
         except:
@@ -394,6 +399,21 @@ class ChatBot(object):
                     continue
 
         return keywords
+
+
+    def capture_screen(self):
+        """
+            capture browser screen
+        :return:
+        """
+        driver = self.getdriver()
+        if driver is None:
+            return
+
+        driver.save_screenshot("c:\\zextor\\screenshot.png")
+        if pathlib.Path("c:\\zextor\\screenshot.png").is_file():
+            f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+            f.send_keys("c:\\zextor\\screenshot.png")
 
     def get_kyobo_new_book(self):
         URL = "http://www.kyobobook.co.kr/categoryRenewal/categoryMain.laf?linkClass=011504&mallGb=KOR&orderClick=JAR"
