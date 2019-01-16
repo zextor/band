@@ -167,15 +167,21 @@ class ChatBot(object):
                 self.refresh()
 
             elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
-                print(" {시청률}", end="")
+                print("{시청률}", end="")
                 l = self.query_tv_rating()
                 self.sendmessage(CurrentUser + "님 실시간 시청율입니다.")
                 self.sendmessage(l)
 
             elif CurrentCmd.endswith(" 뜻"):
-                print(" {사전} ", end="")
+                print("{사전}", end="")
                 Word = CurrentCmd[:-2]
                 T = self.get_dic(CurrentUser, Word)
+                self.sendmessage(T)
+
+            elif CurrentCmd.endswith(" 검색"):
+                print("{검색}", end="")
+                Word = CurrentCmd[:-3]
+                T = self.get_search(CurrentUser, Word)
                 self.sendmessage(T)
 
             elif CurrentCmd.startswith("더보기"):
@@ -357,7 +363,7 @@ class ChatBot(object):
                     driver.switch_to_window(driver.window_handles[1])
                     # begin write
                     driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
-                    sleep(1)
+                    sleep(3)
                     # contents
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("\n")
                     sleep(1)
@@ -367,7 +373,7 @@ class ChatBot(object):
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_story+"\n\n")
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_publisher+"\n\n")
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(image_url+"\n")
-                    sleep(1)
+                    sleep(3)
 
                     # commit
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
@@ -601,7 +607,33 @@ class ChatBot(object):
         return ret
 
 
+    def get_search(self, User, Word):
+        """
+            키워드 검색
+        :param User:
+        :param Word:
+        :return:
+        """
+        URL = "https://openapi.naver.com/v1/search/encyc.json?query=" + Word
+        res = requests.get(URL, headers=HEADERS_NAVER_OPENAPI)
+        data = json.loads(res.text)
 
+        if data['display'] > 0:
+            Means = "{}님 {}의 검색결과 입니다.".format(User, Word)
+            Index = 1
+            for item in data['items']:
+                Text = item['description']
+                R = get_pure_text(Text)
+                R2 = "{}. {}".format(Index, R)
+                Means = Means + "\n" + R2
+                if len(item['link']) > 0:
+                    self.links[Index] = item['link']
+                Index = Index + 1
+                if Index == 4:
+                    break
+            return Means
+        else:
+            return "{}님 검색결과가 없습니다.".format(User)
 
     def get_dic(self, User, Word):
         """

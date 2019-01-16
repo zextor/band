@@ -26,14 +26,16 @@ c = band_chatbots.ChatBot()
 c.register_callback_sendmessage(cb)
 c.register_callback_refresh(rf)
 c.register_callback_getdriver(gd)
+
 #c.query_weather()
 #c.query_keywords()
-c.query_new_book(None)
+#c.query_new_book(None)
 #c.query_tv_rating()
 # test
 
-print(c.query("새로운 메세지 : 란뽀 : 뽀봇 느려"))
+print(c.query("새로운 메세지 : 란뽀 : 팔만대장경 검색"))
 print(c.query("새로운 메세지 : 란뽀 : 기울기"))
+
 #print(c.query("새로운 메세지 : 란뽀 : 날씨"))
 #print(c.query("새로운 메세지 : 란뽀 :  2800*0.6 ="))
 #print(c.query("새로운 메세지 : 란뽀 : 기중기"))
@@ -41,4 +43,3 @@ print(c.query("새로운 메세지 : 란뽀 : 기울기"))
 #print(c.query("새로운 메세지 : 란뽀 : 기중기"))
 #print(c.query("새로운 메세지 : 란뽀 : 체근근"))
 #print(c.query("새로운 메세지 : 란네 : 끝말잇기"))
-
