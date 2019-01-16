@@ -73,7 +73,7 @@ class ChatBot(object):
 
         # drop first value
         temp = self.query_keywords()
-        #temp = self.query_new_book(None) #필요없음
+        temp = self.query_new_book(None)
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
@@ -295,7 +295,7 @@ class ChatBot(object):
         delimeter = ":"
         if s.text.find(":") < 0:
             delimeter = ","
-        pair = s.text.split(":")
+        pair = s.text.split(delimeter)
         new_books = [{"title":pair[0].strip(), "author":pair[1].strip()}]
 
         while True:
