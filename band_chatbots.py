@@ -357,8 +357,10 @@ class ChatBot(object):
                     driver.switch_to_window(driver.window_handles[1])
                     # begin write
                     driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
+                    sleep(1)
                     # contents
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("\n")
+                    sleep(1)
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("#신간\n")
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("{} - {}\n\n".format(book["title"], book["author"]))
                     driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys(p_intro+"\n\n")
