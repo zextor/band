@@ -664,9 +664,16 @@ class ChatBot(object):
 
                 driver.switch_to_window(driver.window_handles[0])
                 sleep(0.5)
+
                 f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
                 f.send_keys(localfile)
+
             except:
+                sleep(1)
+                alert = driver.switch_to_alert()
+                if alert is not None:
+                    alert.accept()
+                    print("alert accepted")
                 continue
 
         driver.switch_to_window(driver.window_handles[0])
