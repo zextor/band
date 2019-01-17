@@ -676,13 +676,12 @@ class ChatBot(object):
                 alert = driver.switch_to_alert()
                 # 여기온건 Alert 창이 있다는 뜻
                 alert.accept()
-            except NoAlertPresentException:
-                # it's good
-                continue
+
             except Exception as e:
                 print("no alert")
                 continue
 
+        sleep(1)
         driver.switch_to_window(driver.window_handles[0])
         return
 
