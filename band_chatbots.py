@@ -11,7 +11,7 @@ import traceback
 import linecache
 from time import sleep
 from bs4 import BeautifulSoup
-
+from urllib.parse import urlparse, parse_qs
 
 """
     global 
@@ -166,7 +166,7 @@ class ChatBot(object):
                 print("{핑퐁}", end="")
                 self.sendmessage("네! " + CurrentUser + "님")
 
-            elif CurrentCmd == "뽀봇 느려":
+            elif CurrentCmd == "빨리":
                 print("{브라우저갱신}", end="")
                 self.sendmessage("{}님! 더 빨리 대답할께요ㅠ".format(CurrentUser))
                 self.refresh()
@@ -188,6 +188,11 @@ class ChatBot(object):
                 Word = CurrentCmd[:-3]
                 T = self.get_search(CurrentUser, Word)
                 self.sendmessage(T)
+
+            elif CurrentCmd.endswith(" 사진"):
+                print("{사진}", end="")
+                Word = CurrentCmd[:-3]
+                self.get_image(CurrentUser, Word)
 
             elif CurrentCmd.startswith("더보기"):
                 print(" {사전:더보기} ", end="")
@@ -626,6 +631,41 @@ class ChatBot(object):
 
         return ret
 
+    def get_image(self, User, Word):
+        """
+            사진검색, 브라우저 3번째 탭이 사용가능해야 함
+        :param User:
+        :param Word:
+        :return:
+        """
+        driver = self.getdriver()
+        if driver is None:
+            return
+        driver.switch_to_window(driver.window_handles[2])
+        sleep(0.5)
+        driver.get("https://www.google.com/search?as_st=y&tbm=isch&hl=ko&safe=active&tbs=isz:l&as_q="+Word)
+
+        for index in range(1,4):
+            try:
+                driver.switch_to_window(driver.window_handles[2])
+                xpath = '//*[@id="rg_s"]/div[{}]/a[1]'.format(index)
+                we = driver.find_element_by_xpath(xpath)
+                u = we.get_attribute("href")
+                parsed = urlparse(u)
+                img = parse_qs(parsed.query)["imgurl"]
+                r = requests.get(img[0])
+                localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
+                with open(localfile, "wb") as code:
+                    code.write(r.content)
+
+                driver.switch_to_window(driver.window_handles[0])
+                sleep(0.5)
+                f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+                f.send_keys(localfile)
+            except:
+                continue
+
+        driver.switch_to_window(driver.window_handles[0])
 
     def get_search(self, User, Word):
         """
