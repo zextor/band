@@ -641,13 +641,15 @@ class ChatBot(object):
         driver = self.getdriver()
         if driver is None:
             return
-        driver.switch_to_window(driver.window_handles[2])
+
+        driver.switch_to.window(driver.window_handles[2])
         sleep(0.5)
         driver.get("https://www.google.com/search?as_st=y&tbm=isch&hl=ko&safe=active&tbs=isz:l&as_q="+Word)
 
         for index in range(1,4):
             try:
-                driver.switch_to_window(driver.window_handles[2])
+                driver.switch_to.window(driver.window_handles[2])
+
                 xpath = '//*[@id="rg_s"]/div[{}]/a[1]'.format(index)
                 we = driver.find_element_by_xpath(xpath)
                 u = we.get_attribute("href")
@@ -667,16 +669,19 @@ class ChatBot(object):
 
                 f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
                 f.send_keys(localfile)
-
+                alert = driver.switch_to_alert()
+                if alert is None:
+                    print("No Alert")
+                else:
+                    alert.accept()
+                    print("Alert Accept")
             except:
                 sleep(1)
-                alert = driver.switch_to_alert()
-                if alert is not None:
-                    alert.accept()
-                    print("alert accepted")
+                print("no alert")
                 continue
 
         driver.switch_to_window(driver.window_handles[0])
+        return
 
     def get_search(self, User, Word):
         """
