@@ -656,7 +656,7 @@ class ChatBot(object):
                 r = requests.get(img[0])
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
 
-                if len(r.content) < 1024:
+                if len(r.content) < 1024:       # 404 일 경우 취소함
                     continue
 
                 with open(localfile, "wb") as code:
