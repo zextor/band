@@ -658,6 +658,10 @@ class ChatBot(object):
                 img_url = img[0]
                 img_url = img_url.replace("https", "http")
                 r = requests.get(img_url)
+
+                if r.status_code != 200:
+                    continue
+
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
 
                 if len(r.content) < 1024:       # 404 일 경우 취소함
@@ -677,8 +681,8 @@ class ChatBot(object):
                 else:
                     alert.accept()
                     print("Alert Accept")
-            except:
-                sleep(1)
+            except Exception as e:
+                sleep(0.1)
                 print("no alert")
                 continue
 
