@@ -89,8 +89,6 @@ if __name__ == '__main__':
 
     input("Enter after login process...")
 
-    c.get_image("란뽀", "팔만대장경")
-
     schedule.every().hour.do(alarm_new_book)
     # 브라우저 갱신
     schedule.every().day.at("06:30").do(refresh)
