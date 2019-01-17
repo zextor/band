@@ -643,14 +643,11 @@ class ChatBot(object):
             return
 
         driver.switch_to.window(driver.window_handles[2])
-        sleep(0.5)
         driver.get("https://www.google.com/search?as_st=y&tbm=isch&hl=ko&safe=active&tbs=isz:l&as_q="+Word)
-        try_max = 2
 
-        for index in range(1,try_max):
+        for index in range(1, 4):
             try:
                 driver.switch_to.window(driver.window_handles[2])
-
                 xpath = '//*[@id="rg_s"]/div[{}]/a[1]'.format(index)
                 we = driver.find_element_by_xpath(xpath)
                 u = we.get_attribute("href")
@@ -659,36 +656,30 @@ class ChatBot(object):
                 img_url = img[0]
                 img_url = img_url.replace("https", "http")
                 r = requests.get(img_url)
-
                 if r.status_code != 200:
-                    try_max = try_max + 1
                     continue
 
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
-
                 if len(r.content) < 1024:       # 404 일 경우 취소함
-                    try_max = try_max + 1
                     continue
 
                 with open(localfile, "wb") as code:
                     code.write(r.content)
 
                 driver.switch_to_window(driver.window_handles[0])
-                sleep(0.5)
-
                 f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
                 f.send_keys(localfile)
-                sleep(0.5)
+                # 파일 전송시 에러가 나면 alert이 뜰 때까지 시간이 소요된다
+                # 따라서 그 전에 switch_to_alert 를 호출하면 예외가 발생하므로
+                # 충분한 시간을 가지고 대기한 후 alert를 확인해야 함
+                sleep(5)
                 alert = driver.switch_to_alert()
-
-                if alert is None:
-                    print("No Alert")
-                else:
-                    alert.accept()
-                    print("Alert Accept")
-
+                # 여기온건 Alert 창이 있다는 뜻
+                alert.accept()
+            except NoAlertPresentException:
+                # it's good
+                continue
             except Exception as e:
-                sleep(0.1)
                 print("no alert")
                 continue
 
