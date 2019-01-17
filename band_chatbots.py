@@ -74,7 +74,7 @@ class ChatBot(object):
 
         # drop first value
         temp = self.query_keywords()
-        temp = self.query_new_book(None)
+        # temp = self.query_new_book(None)
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
@@ -655,6 +655,10 @@ class ChatBot(object):
                 img = parse_qs(parsed.query)["imgurl"]
                 r = requests.get(img[0])
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
+
+                if len(r.content) < 1024:
+                    continue
+
                 with open(localfile, "wb") as code:
                     code.write(r.content)
 
