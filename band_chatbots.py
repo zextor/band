@@ -168,7 +168,7 @@ class ChatBot(object):
 
             elif CurrentCmd == "빨리":
                 print("{브라우저갱신}", end="")
-                self.sendmessage("{}님! 더 빨리 대답할께요ㅠ".format(CurrentUser))
+                self.sendmessage("네!! 더 빨리!! 읏쌰읏쌰!!".format(CurrentUser))
                 self.refresh()
 
             elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
