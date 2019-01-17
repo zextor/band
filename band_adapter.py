@@ -137,6 +137,9 @@ if __name__ == '__main__':
             # sleep interval 1 sec
             schedule.run_pending()
             time.sleep(1)
+
+
+
         except AttributeError:
             print("AttributeError Error")
             pass
@@ -144,5 +147,8 @@ if __name__ == '__main__':
             print("Terminate by user requests.")
             exit(1)
         except Exception as e:
+
+
+
             pprint.pprint(e)
             pass

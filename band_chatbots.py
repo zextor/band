@@ -645,8 +645,9 @@ class ChatBot(object):
         driver.switch_to.window(driver.window_handles[2])
         sleep(0.5)
         driver.get("https://www.google.com/search?as_st=y&tbm=isch&hl=ko&safe=active&tbs=isz:l&as_q="+Word)
+        try_max = 2
 
-        for index in range(1,4):
+        for index in range(1,try_max):
             try:
                 driver.switch_to.window(driver.window_handles[2])
 
@@ -660,11 +661,13 @@ class ChatBot(object):
                 r = requests.get(img_url)
 
                 if r.status_code != 200:
+                    try_max = try_max + 1
                     continue
 
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
 
                 if len(r.content) < 1024:       # 404 일 경우 취소함
+                    try_max = try_max + 1
                     continue
 
                 with open(localfile, "wb") as code:
@@ -675,12 +678,15 @@ class ChatBot(object):
 
                 f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
                 f.send_keys(localfile)
+                sleep(0.5)
                 alert = driver.switch_to_alert()
+
                 if alert is None:
                     print("No Alert")
                 else:
                     alert.accept()
                     print("Alert Accept")
+
             except Exception as e:
                 sleep(0.1)
                 print("no alert")
