@@ -655,7 +655,9 @@ class ChatBot(object):
                 u = we.get_attribute("href")
                 parsed = urlparse(u)
                 img = parse_qs(parsed.query)["imgurl"]
-                r = requests.get(img[0])
+                img_url = img[0]
+                img_url = img_url.replace("https", "http")
+                r = requests.get(img_url)
                 localfile ="c:\\zextor\\download_image_{}.jpg".format(index)
 
                 if len(r.content) < 1024:       # 404 일 경우 취소함
