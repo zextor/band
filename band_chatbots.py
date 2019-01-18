@@ -282,6 +282,8 @@ class ChatBot(object):
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
 
+        return ""
+
         rv = self.get_howmistery_new_book()
         if len(rv) != 0:
             if self.howmistery_title_author != rv:
@@ -339,6 +341,8 @@ class ChatBot(object):
             book = new_books[index]
 
             keywords = "{} {}".format(book["title"], book["author"])
+
+            ### 게시물 중지 ###
 
             url = "https://www.aladin.co.kr/m/msearch.aspx?SearchTarget=Book&KeyWord={}&KeyRecentPublish=0&OutStock=0&ViewType=Detail" \
                   "&SortOrder=5&CustReviewCount=0&CustReviewRank=0&KeyFullWord={}&KeyLastWord={}&CategorySearch=" \
