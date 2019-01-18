@@ -39,6 +39,7 @@ if __name__ == '__main__':
         r = is_live(index)
         if len(r) > 0:
             file.write(r)
+            print(r)
 
         sleep(0.5)
     file.close()
