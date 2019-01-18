@@ -28,6 +28,8 @@ def is_live(index):
     if data["result_code"] == 1:
         r = "{}|{}|{}|{}\n".format(index,data["result_data"]["band"]["member_count"],data["result_data"]["band"]["name"],data["result_data"]["band"]["keywords"])
         return r
+    else:
+        print("{} {} - {}".format(index, data["result_code"], data["result_data"]["message"]))
     return ""
 
 
