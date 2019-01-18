@@ -421,6 +421,8 @@ class ChatBot(object):
             return
 
         driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
+        sleep(1)
+        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
 
 
     def capture_screen(self):
