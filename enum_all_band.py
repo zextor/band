@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 from time import sleep
-
+import codecs
 
 def is_live(index):
     """
@@ -26,15 +26,20 @@ def is_live(index):
     res = requests.get(url, headers = HEADERS_FOR_NAVER)
     data = json.loads(res.text)
     if data["result_code"] == 1:
-        print("{}|{}|{}|{}".format(index,data["result_data"]["band"]["member_count"],data["result_data"]["band"]["name"],data["result_data"]["band"]["keywords"]))
+        r = "{}|{}|{}|{}\n".format(index,data["result_data"]["band"]["member_count"],data["result_data"]["band"]["name"],data["result_data"]["band"]["keywords"])
+        return r
+    return ""
 
 
 
 if __name__ == '__main__':
 
+    file = codecs.open("band_list.txt", "w", "utf-8")
     for index in range(73188261, -1, -1):
-        if is_live(index):
-            print("https://band.us/band/{}".format(index))
+        r = is_live(index)
+        if len(r) > 0:
+            file.write(r)
 
         sleep(0.5)
+    file.close()
 
