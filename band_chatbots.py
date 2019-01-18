@@ -416,7 +416,12 @@ class ChatBot(object):
             call members
         :return:
         """
-        self.sendmessage("@란"+Keys.ARROW_DOWN+Keys.ENTER)
+        driver = self.getdriver()
+        if driver is None:
+            return
+
+        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
+
 
     def capture_screen(self):
         """
