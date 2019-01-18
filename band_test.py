@@ -33,7 +33,7 @@ c.register_callback_getdriver(gd)
 #c.query_tv_rating()
 # test
 
-print(c.query("새로운 메세지 : 란뽀 : 팔만대장경 사진"))
+print(c.query("새로운 메세지 : 란뽀 : 얀 제거스 책들"))
 print(c.query("새로운 메세지 : 란뽀 : 기울기"))
 
 #print(c.query("새로운 메세지 : 란뽀 : 날씨"))

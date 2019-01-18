@@ -147,8 +147,5 @@ if __name__ == '__main__':
             print("Terminate by user requests.")
             exit(1)
         except Exception as e:
-
-
-
             pprint.pprint(e)
             pass
