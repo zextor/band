@@ -12,6 +12,8 @@ import linecache
 from time import sleep
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 """
     global 
@@ -161,6 +163,10 @@ class ChatBot(object):
             elif CurrentCmd == "캡쳐":
                 print("{캡쳐}", end="")
                 self.capture_screen()
+
+            elif CurrentCmd == "누구":
+                print("{캡쳐}", end="")
+                self.call_member()
 
             elif CurrentCmd == "뽀봇":
                 print("{핑퐁}", end="")
@@ -405,6 +411,12 @@ class ChatBot(object):
 
         return keywords
 
+    def call_member(self):
+        """
+            call members
+        :return:
+        """
+        self.sendmessage("@란"+Keys.ARROW_DOWN+Keys.ENTER)
 
     def capture_screen(self):
         """
