@@ -166,7 +166,7 @@ class ChatBot(object):
 
             elif CurrentCmd == "누구":
                 print("{캡쳐}", end="")
-                self.call_member()
+                self.call_member(CurrentUser)
 
             elif CurrentCmd == "뽀봇":
                 print("{핑퐁}", end="")
@@ -411,7 +411,7 @@ class ChatBot(object):
 
         return keywords
 
-    def call_member(self):
+    def call_member(self, user):
         """
             call members
         :return:
@@ -422,10 +422,10 @@ class ChatBot(object):
 
         driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
         sleep(0.5)
-        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("란")
+        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(user)
         sleep(0.5)
         driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
-
+        self.sendmessage("님!")
 
     def capture_screen(self):
         """
