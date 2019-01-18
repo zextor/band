@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+from time import sleep
 
 
 def is_live(index):
@@ -34,4 +35,6 @@ if __name__ == '__main__':
     for index in range(73188261, -1, -1):
         if is_live(index):
             print("https://band.us/band/{}".format(index))
+
+        sleep(0.5)
 
