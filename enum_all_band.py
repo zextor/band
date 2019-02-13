@@ -43,6 +43,6 @@ if __name__ == '__main__':
             file.write(r)
             print(r)
 
-        sleep(0.5)
+        sleep(1)
     file.close()
 
