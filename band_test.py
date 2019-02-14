@@ -29,7 +29,7 @@ c.register_callback_getdriver(gd)
 
 #c.query_weather()
 #c.query_keywords()
-#c.query_new_book(None)
+c.query_new_book(None)
 #c.query_tv_rating()
 # test
 

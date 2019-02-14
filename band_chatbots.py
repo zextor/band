@@ -281,7 +281,7 @@ class ChatBot(object):
         #         self.kyobo_title = rv[0]
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
-        # return ""
+        return ""
 
         rv = self.get_howmistery_new_book()
         if len(rv) != 0:
@@ -332,7 +332,10 @@ class ChatBot(object):
             if s.text.find(":") < 0:
                 delimeter = ","
             pair = s.text.split(delimeter)
-            new_books.append({"title":pair[0].strip(), "author":pair[1].strip()})
+            if len(pair) == 1:
+                new_books.append({"title": pair[0].strip(), "author": "없음"})
+            else:
+                new_books.append({"title":pair[0].strip(), "author":pair[1].strip()})
 
         # delete last book
 
