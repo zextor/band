@@ -51,7 +51,9 @@ def get_new_message():
     """
     last_message = None
     try:
-        driver.switch_to.window(driver.window_handles[0])
+        if driver.current_window_handle != driver.window_handles[0]:
+            driver.switch_to.window(driver.window_handles[0])
+
         last_message = (BeautifulSoup(driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
     except AttributeError:
         last_message = ""

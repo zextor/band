@@ -281,8 +281,7 @@ class ChatBot(object):
         #         self.kyobo_title = rv[0]
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
-
-        return ""
+        # return ""
 
         rv = self.get_howmistery_new_book()
         if len(rv) != 0:
