@@ -268,12 +268,11 @@ class ChatBot(object):
             print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
             print(traceback.print_exc())
 
-    def query_new_book(self, driver):
+    def query_new_book(self, IsInit):
         """
             return text about new kyobo, howmistery book
         :return:
         """
-        return ""
         ret = ""
         # rv = self.get_kyobo_new_book()
         # if len(rv) != 0:
@@ -283,7 +282,7 @@ class ChatBot(object):
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
 
-        rv = self.get_howmistery_new_book()
+        rv = self.get_howmistery_new_book(IsInit)
         if len(rv) != 0:
             if self.howmistery_title_author != rv:
                 text = "신간 소식이 있습니다.\n{}".format(rv)
@@ -298,15 +297,13 @@ class ChatBot(object):
             driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
             driver.switch_to_window(driver.window_handles[0])
 
+        ww
         """
         return ret
 
-    def get_howmistery_new_book(self):
+    def get_howmistery_new_book(self, IsInit = False):
 
         keywords = ""
-
-        with open('last_book.dic', 'rb') as f:
-            last_book = pickle.load(f)
 
         URL = "http://www.howmystery.com/newrelease"
         res = requests.get(URL)
@@ -315,14 +312,16 @@ class ChatBot(object):
         s = d.findNext('li')
         s = s.find('p')
         s = s.find('b')
-        delimeter = ":"
-        if s.text.find(":") < 0:
-            delimeter = ","
-        pair = s.text.split(delimeter)
-        new_books = [{"title":pair[0].strip(), "author":pair[1].strip()}]
+
+        if IsInit:
+            with open('last_book.dic', 'wb') as f:
+                pickle.dump(s.text, f)
+            return ""
+
+        new_books = [ s.text ]
 
         while True:
-            if new_books[len(new_books)-1]["title"] == last_book["title"]:
+            if new_books[len(new_books)-1] == last_book:
                 break
 
             s = s.findNext('li')
