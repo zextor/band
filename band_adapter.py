@@ -12,7 +12,7 @@ import schedule
 """
     refresh interval for heavy browser
 """
-REFRESH_INTERVAL = 5.0
+# REFRESH_INTERVAL = 5.0
 
 def refresh():
     """
@@ -77,7 +77,9 @@ if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
     print("Webdriver : ", driver)
-    driver.get('https://band.us/band/73188261/chat/CL1Vt8')
+    driver.get('https://band.us/band/70571287/chat/CIExV-')
+    # https://band.us/band/70571287/chat/CIExV- new band
+    # https://band.us/band/73188261/chat/CL1Vt8 old band
 
     new_message = None
     old_message = None

@@ -296,14 +296,14 @@ class ChatBot(object):
             driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("여기에 글을 적습니다.\n여러가지")
             driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
             driver.switch_to_window(driver.window_handles[0])
-
-        ww
+        
         """
         return ret
 
     def get_howmistery_new_book(self, IsInit = False):
 
         keywords = ""
+        '''
 
         URL = "http://www.howmystery.com/newrelease"
         res = requests.get(URL)
@@ -413,7 +413,7 @@ class ChatBot(object):
                     print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
                     print(traceback.print_exc())
                     continue
-
+        '''
         return keywords
 
     def call_member(self, user):
