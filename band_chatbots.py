@@ -16,61 +16,6 @@ from urllib.parse import urlparse, parse_qs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-
-"""
-옮길 함수들
-    new_message = get_new_message()
-
-            if len(new_message) > 0:
-                # if new message
-                if new_message != old_message:
-                    reply = c.query(new_message)
-                    send_message(reply)
-                    old_message = new_message
-                    
-                    
-    new_message = None
-    old_message = None
-    c.register_callback_sendmessage(send_message)
-    c.register_callback_refresh(refresh)
-    c.register_callback_getdriver(get_driver)
-    print(driver.current_window_handle)
-    
-    schedule.every().hour.do(alarm_new_book)
-    
-            
-
-def refresh():
-        refresh chrome browser
-    :return:
-    driver.refresh()
-
-def get_driver():
-
-        return webdriver instance
-    :return: webdriver
-
-    return driver
-
-def get_new_message():
-
-        Get New Text from Browser
-        :returns New Message
-
-    last_message = None
-    try:
-        if driver.current_window_handle != driver.window_handles[0]:
-            driver.switch_to.window(driver.window_handles[0])
-
-        last_message = (BeautifulSoup(driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
-    except AttributeError:
-        last_message = ""
-        pass
-    return last_message
-"""
-
-
-
 """
     global 
 """
@@ -104,6 +49,9 @@ def get_pure_text(text):
 
 
 def refresh_browser():
+    print("Refreshed!")
+    c = ChatBot()
+    c.refresh_browser()
     pass
 
 
@@ -133,7 +81,6 @@ class ChatBot(object):
         self.last_message = ""
 
         # self.init = True
-        # self.sendmessage = None
         # self.refresh = None
         # self.getdriver = None
         # self.keywords_before = set("empty_set")
@@ -181,10 +128,13 @@ class ChatBot(object):
 
     def work(self):
         if self.get_new_message():
-            self.send_message(self.last_message)
+            self.query(self.last_message)
 
         schedule.run_pending()
         pass
+
+    def refresh_browser(self):
+        self.driver.refresh()
 
     def send_message(self, text):
         if type(text) == str and len(text) > 0:
@@ -201,22 +151,21 @@ class ChatBot(object):
         try:
             pos1 = text.find(':')
             pos2 = text.find(':', pos1 + 1)
-            CurrentUser = text[pos1 + 2:pos2 - 1]
-            CurrentCmd = text[pos2 + 2:]
+            current_user_name = text[pos1 + 2:pos2 - 1]
+            current_command = text[pos2 + 2:]
 
-            # 같은 메세지이면 패스
-            if self.BeforeCmd == CurrentCmd and self.BeforeUser == CurrentUser:
-                return ""
+            # # 같은 메세지이면 패스
+            # if self.BeforeCmd == current_command and self.BeforeUser == current_user_name:
+            #     return ""
+            # self.BeforeUser = current_user_name
+            # self.BeforeCmd = current_command
 
-            self.BeforeUser = CurrentUser
-            self.BeforeCmd = CurrentCmd
-
-            print("명령 : {}".format(text))
+            print("Message : {}".format(text))
 
             isProcessed = True
 
             if self.active_wordchain:
-                token = get_pure_text(CurrentCmd)
+                token = get_pure_text(current_command)
                 if len(token) == 3:
                     if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
                         if self.wordchain_last_bot_answer[2] != token[0]:
@@ -230,7 +179,7 @@ class ChatBot(object):
 
                     T = self.wordchain(token)
                     if len(T) == 0:
-                        T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(CurrentUser)
+                        T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(current_user_name)
                         self.active_wordchain = False
                         self.wordchain_last_user_answer = ""
                         self.wordchain_last_bot_answer = ""
@@ -242,74 +191,74 @@ class ChatBot(object):
                         self.wordchain_all_answers.append(T)
                     return T
 
-            if CurrentCmd == "날씨":
+            if current_command == "날씨":
                 print("{날씨}", end="")
-                ret = "{} 님 현재날씨입니다.\n{}".format(CurrentUser, self.query_weather())
-                self.sendmessage(ret)
+                ret = "{} 님 현재날씨입니다.\n{}".format(current_user_name, self.query_weather())
+                self.send_message(ret)
 
-            elif CurrentCmd == "캡쳐":
+            elif current_command == "캡쳐":
                 print("{캡쳐}", end="")
                 self.capture_screen()
 
-            elif CurrentCmd == "누구":
+            elif current_command == "누구":
                 print("{캡쳐}", end="")
-                self.call_member(CurrentUser)
+                self.call_member(current_user_name)
 
-            elif CurrentCmd == "뽀봇":
+            elif current_command == "뽀봇":
                 print("{핑퐁}", end="")
-                self.sendmessage("네! " + CurrentUser + "님")
+                self.send_message("네! " + current_user_name + "님")
 
-            elif CurrentCmd == "빨리":
-                print("{브라우저갱신}", end="")
-                self.sendmessage("네!! 더 빨리!! 읏쌰읏쌰!!".format(CurrentUser))
-                self.refresh()
+            elif current_command == "빨리":
+                refresh_browser()
+                print("[call refresh_browser()]")
+                self.send_message("빨리!! 읏쌰읏쌰!!")
 
-            elif CurrentCmd in ["시청률", "시청율", "드라마", "예능"]:
+            elif current_command in ["시청률", "시청율", "드라마", "예능"]:
                 print("{시청률}", end="")
                 l = self.query_tv_rating()
-                self.sendmessage(CurrentUser + "님 실시간 시청율입니다.")
-                self.sendmessage(l)
+                self.send_message(current_user_name + "님 실시간 시청율입니다.")
+                self.send_message(l)
 
-            elif CurrentCmd.endswith(" 뜻"):
+            elif current_command.endswith(" 뜻"):
                 print("{사전}", end="")
-                Word = CurrentCmd[:-2]
-                T = self.get_dic(CurrentUser, Word)
-                self.sendmessage(T)
+                Word = current_command[:-2]
+                T = self.get_dic(current_user_name, Word)
+                self.send_message(T)
 
-            elif CurrentCmd.endswith(" 검색"):
+            elif current_command.endswith(" 검색"):
                 print("{검색}", end="")
-                Word = CurrentCmd[:-3]
-                T = self.get_search(CurrentUser, Word)
-                self.sendmessage(T)
+                Word = current_command[:-3]
+                T = self.get_search(current_user_name, Word)
+                self.send_message(T)
 
-            elif CurrentCmd.endswith(" 사진"):
+            elif current_command.endswith(" 사진"):
                 print("{사진}", end="")
-                Word = CurrentCmd[:-3]
-                self.get_image(CurrentUser, Word)
+                Word = current_command[:-3]
+                self.get_image(current_user_name, Word)
 
-            elif CurrentCmd.startswith("더보기"):
+            elif current_command.startswith("더보기"):
                 print(" {사전:더보기} ", end="")
-                Index = CurrentCmd[3:].strip()
+                Index = current_command[3:].strip()
                 try:
                     ind = int(Index)
                     if ind in range(1, 4):
-                        self.sendmessage(self.links[ind])
+                        self.send_message(self.links[ind])
                 except:
                     pass
 
-            elif CurrentCmd.endswith(" 책"):
+            elif current_command.endswith(" 책"):
                 print(" {도서} ", end="")
-                Book = CurrentCmd[:-2]
-                T = self.get_book(CurrentUser, Book)
-                self.sendmessage(T)
+                Book = current_command[:-2]
+                T = self.get_book(current_user_name, Book)
+                self.send_message(T)
 
-            elif CurrentCmd.endswith(" 책들"):
+            elif current_command.endswith(" 책들"):
                 print(" {저자} ", end="")
-                author = CurrentCmd[:-3]
-                T = self.get_author(CurrentUser, author)
-                self.sendmessage(T)
+                author = current_command[:-3]
+                T = self.get_author(current_user_name, author)
+                self.send_message(T)
 
-            elif CurrentCmd == "끝말잇기":
+            elif current_command == "끝말잇기":
                 print("{끝말잇기}", end="")
                 if self.active_wordchain:
                     print("{종료루틴}", end="")
@@ -317,14 +266,14 @@ class ChatBot(object):
                     self.wordchain_last_user_answer = ""
                     self.wordchain_last_bot_answer = ""
                     self.wordchain_all_answers.clear()
-                    self.sendmessage("끝말잇기를 마칩니다 ^^")
+                    self.send_message("끝말잇기를 마칩니다 ^^")
                 else:
                     print("{시작루틴}", end="")
                     self.active_wordchain = True
-                    self.sendmessage("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
+                    self.send_message("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
-            elif CurrentCmd.endswith("="):
-                math = CurrentCmd[:-1]
+            elif current_command.endswith("="):
+                math = current_command[:-1]
                 exp = math.strip()
                 exp = exp.replace("÷", "/")
                 exp = exp.replace("×", "*")
@@ -518,7 +467,7 @@ class ChatBot(object):
         driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(user)
         sleep(0.5)
         driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(Keys.ENTER)
-        self.sendmessage("님!")
+        self.send_message("님!")
 
     def capture_screen(self):
         """
