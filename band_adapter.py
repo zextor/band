@@ -25,7 +25,7 @@ if __name__ == '__main__':
                 # 모듈 교체
                 importlib.reload(band_chatbots)
                 # 인스턴스 새로 생성
-                c = band_chatbots.ChatBot(driver)
+                c = band_chatbots.ChatBot()
                 # 웹드라이버 세팅
                 c.set_driver(driver)
                 # 파일이름 재설정
