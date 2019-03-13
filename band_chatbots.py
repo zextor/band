@@ -424,11 +424,11 @@ class ChatBot(object):
         if driver is None:
             return
 
-        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
+        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys("@")
         sleep(0.5)
-        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(user)
+        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(user)
         sleep(0.5)
-        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
+        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(Keys.ENTER)
         self.sendmessage("님!")
 
     def capture_screen(self):

@@ -35,10 +35,10 @@ def send_message(text):
         :returns none
     """
     if len(text) > 0:
-        driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text)
+        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(text)
 
         if not text.endswith("\n"):
-            driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("\n")
+            driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys("\n")
     # no need click send-button
     # text will send, if ends with "\n"
     # driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[2]/div[2]/button').click()
