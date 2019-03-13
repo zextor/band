@@ -164,32 +164,32 @@ class ChatBot(object):
 
             isProcessed = True
 
-            if self.active_wordchain:
-                token = get_pure_text(current_command)
-                if len(token) == 3:
-                    if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
-                        if self.wordchain_last_bot_answer[2] != token[0]:
-                            return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
-
-                    if not self.is_word(token):
-                        return "'{}' 는 사전에 없는 명사네요.".format(token)
-
-                    if token in self.wordchain_all_answers:
-                        return "'{}' 은/는 이미 사용한 명사에요!".format(token)
-
-                    T = self.wordchain(token)
-                    if len(T) == 0:
-                        T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(current_user_name)
-                        self.active_wordchain = False
-                        self.wordchain_last_user_answer = ""
-                        self.wordchain_last_bot_answer = ""
-                        self.wordchain_all_answers.clear()
-                    else:
-                        self.wordchain_last_user_answer = token
-                        self.wordchain_last_bot_answer = T
-                        self.wordchain_all_answers.append(token)
-                        self.wordchain_all_answers.append(T)
-                    return T
+            # if self.active_wordchain:
+            #     token = get_pure_text(current_command)
+            #     if len(token) == 3:
+            #         if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
+            #             if self.wordchain_last_bot_answer[2] != token[0]:
+            #                 return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
+            #
+            #         if not self.is_word(token):
+            #             return "'{}' 는 사전에 없는 명사네요.".format(token)
+            #
+            #         if token in self.wordchain_all_answers:
+            #             return "'{}' 은/는 이미 사용한 명사에요!".format(token)
+            #
+            #         T = self.wordchain(token)
+            #         if len(T) == 0:
+            #             T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(current_user_name)
+            #             self.active_wordchain = False
+            #             self.wordchain_last_user_answer = ""
+            #             self.wordchain_last_bot_answer = ""
+            #             self.wordchain_all_answers.clear()
+            #         else:
+            #             self.wordchain_last_user_answer = token
+            #             self.wordchain_last_bot_answer = T
+            #             self.wordchain_all_answers.append(token)
+            #             self.wordchain_all_answers.append(T)
+            #         return T
 
             if current_command == "날씨":
                 print("{날씨}", end="")
