@@ -12,7 +12,7 @@ from os import rename
 if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
-    print("Webdriver : ", driver)
+    print("ChromeW Driver : ", driver)
     c = band_chatbots.ChatBot()
     c.set_driver(driver)
 

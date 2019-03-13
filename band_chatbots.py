@@ -181,6 +181,7 @@ class ChatBot(object):
 
     def set_driver(self, adapter_web_driver):
         self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
+
         print("ChatBot Driver : ", adapter_web_driver)
         # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
 
@@ -194,7 +195,8 @@ class ChatBot(object):
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
     def work(self):
-        print("Ping")
+
+
         schedule.run_pending()
         pass
 
