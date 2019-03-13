@@ -7,6 +7,7 @@ import pprint
 import pickle
 import pathlib
 import requests
+import schedule
 import traceback
 import linecache
 from time import sleep
@@ -15,6 +16,88 @@ from urllib.parse import urlparse, parse_qs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+
+"""
+옮길 함수들
+    new_message = get_new_message()
+
+            if len(new_message) > 0:
+                # if new message
+                if new_message != old_message:
+                    reply = c.query(new_message)
+                    send_message(reply)
+                    old_message = new_message
+                    
+                    
+    new_message = None
+    old_message = None
+    c.register_callback_sendmessage(send_message)
+    c.register_callback_refresh(refresh)
+    c.register_callback_getdriver(get_driver)
+    print(driver.current_window_handle)
+    
+    schedule.every().hour.do(alarm_new_book)
+    
+            
+
+def refresh():
+        refresh chrome browser
+    :return:
+    driver.refresh()
+
+def get_driver():
+
+        return webdriver instance
+    :return: webdriver
+
+    return driver
+
+def send_message(text):
+        Send Text to Browser
+        :param  text for send
+        :returns none
+
+    if len(text) > 0:
+        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(text)
+
+        if not text.endswith("\n"):
+            driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys("\n")
+    # no need click send-button
+    # text will send, if ends with "\n"
+    # driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[2]/div[2]/button').click()
+
+
+def get_new_message():
+
+        Get New Text from Browser
+        :returns New Message
+
+    last_message = None
+    try:
+        if driver.current_window_handle != driver.window_handles[0]:
+            driver.switch_to.window(driver.window_handles[0])
+
+        last_message = (BeautifulSoup(driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
+    except AttributeError:
+        last_message = ""
+        pass
+    return last_message
+
+
+def alarm_new_book():
+    #send_message(c.query_new_book(driver))
+    pass
+
+
+def alarm_weather():
+    send_message(c.query_weather())
+
+
+def alarm_keywords():
+    send_message(c.query_keywords())
+
+
+"""
 """
     global 
 """
@@ -47,36 +130,75 @@ def get_pure_text(text):
     return pure_text.strip()
 
 
+def refresh_browser():
+    pass
+
+
+def briefing_weather():
+    pass
+
+
+def show_static_message(message):
+    pass
+
+
 class ChatBot(object):
     """
         class for chat service
     """
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(ChatBot, cls).__new__(cls)
+        return cls.instance
 
     def __init__(self):
         """
             for init class
         """
-        self.init = True
-        self.sendmessage = None
-        self.refresh = None
-        self.getdriver = None
-        self.keywords_before = set("empty_set")
-        self.rank_format = "\n1위: {}\n2위: {}\n3위: {}"
-        self.rank = ""
-        self.kyobo_title = ""
-        self.kyobo_author = ""
-        self.howmistery_title_author = ""
-        self.BeforeCmd = ""
-        self.BeforeUser = ""
-        self.links = { 1: "등록안됨", 2: "등록안됨", 3: "등록안됨"}
-        self.active_wordchain = False
-        self.wordchain_all_answers = []
-        self.wordchain_last_user_answer = ""
-        self.wordchain_last_bot_answer = ""
+        self.driver = None
+        self.set_alarm()
 
+        # self.init = True
+        # self.sendmessage = None
+        # self.refresh = None
+        # self.getdriver = None
+        # self.keywords_before = set("empty_set")
+        # self.rank_format = "\n1위: {}\n2위: {}\n3위: {}"
+        # self.rank = ""
+        # self.kyobo_title = ""
+        # self.kyobo_author = ""
+        # self.howmistery_title_author = ""
+        # self.BeforeCmd = ""
+        # self.BeforeUser = ""
+        # self.links = { 1: "등록안됨", 2: "등록안됨", 3: "등록안됨"}
+        # self.active_wordchain = False
+        # self.wordchain_all_answers = []
+        # self.wordchain_last_user_answer = ""
+        # self.wordchain_last_bot_answer = ""
         # drop first value
-        temp = self.query_keywords()
+        # temp = self.query_keywords()
         # temp = self.query_new_book(None)
+
+    def set_driver(self, adapter_web_driver):
+        self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
+        self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
+
+    def set_alarm(self):
+        # 새로고침
+        schedule.every().day.at("06:30").do(refresh_browser)
+        schedule.every().day.at("12:30").do(refresh_browser)
+        # 아침 날씨 브리핑
+        schedule.every().day.at("07:30").do(briefing_weather)
+        # 끼니 인사
+        schedule.every().day.at("08:00").do(show_static_message, "좋은 하루 보내세요~ ❤")
+        schedule.every().day.at("12:00").do(show_static_message, "점심 맛있게 드세요~ ❤")
+        schedule.every().day.at("18:00").do(show_static_message, "여유로운 저녁 보내세요~ ❤")
+        schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
+
+
+    def work(self):
+        schedule.run_pending()
+        pass
 
     def __str__(self):
         return "This is ChatBot class : {}".format(self.init)
@@ -281,22 +403,24 @@ class ChatBot(object):
         #         self.kyobo_title = rv[0]
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
-        return ""
-        """
-        rv = "" self.get_howmistery_new_book(IsInit)
-        if len(rv) != 0:
-            if self.howmistery_title_author != rv:
-                text = "신간 소식이 있습니다.\n{}".format(rv)
-                self.howmistery_title_author = rv
-                ret = ret + text
 
-            driver.switch_to_window(driver.window_handles[1])
-            driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
-            driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("여기에 글을 적습니다.\n여러가지")
-            driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
-            driver.switch_to_window(driver.window_handles[0])
-        
         """
+                rv = "" self.get_howmistery_new_book(IsInit)
+                if len(rv) != 0:
+                    if self.howmistery_title_author != rv:
+                        text = "신간 소식이 있습니다.\n{}".format(rv)
+                        self.howmistery_title_author = rv
+                        ret = ret + text
+
+                    driver.switch_to_window(driver.window_handles[1])
+                    driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("여기에 글을 적습니다.\n여러가지")
+                    driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[3]/div/button').click()
+                    driver.switch_to_window(driver.window_handles[0])
+
+                """
+
+
         return ret
 
     def get_howmistery_new_book(self, IsInit = False):
@@ -499,7 +623,7 @@ class ChatBot(object):
         """
             network for keywords
         :return:
-        """
+
         res = requests.get("https://www.naver.com")
         s = BeautifulSoup(res.text, 'lxml')
         ul = s.find('div', {'class': 'PM_CL_realtimeKeyword_rolling'})
@@ -518,12 +642,14 @@ class ChatBot(object):
             rv.add(item.text)
 
         return rv
+        """
+        pass
 
     def query_keywords(self):
         """
             return text about naver rasing keywords
         :return: text
-        """
+
         rv = self.get_keywords
         if len(rv) != 0:
             diff = rv - self.keywords_before
@@ -532,6 +658,9 @@ class ChatBot(object):
             return text
         else:
             return ""
+        """
+        pass
+
 
     def get_weather_from_naver(self):
         """
@@ -608,6 +737,7 @@ class ChatBot(object):
 
         return result_new
 
+
     def get_book(self, User, Query):
 
         ptr = Query.find(",")
@@ -629,6 +759,7 @@ class ChatBot(object):
             ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}".format(User, Query, title, author, Price, desc)
             return ret
         return "{}님 검색결과가 없습니다.".format(User)
+
 
     def get_author(self, User, author):
         """
