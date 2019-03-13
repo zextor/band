@@ -281,16 +281,15 @@ class ChatBot(object):
         #         self.kyobo_title = rv[0]
         #         self.kyobo_author = rv[1]
         #         ret = ret + text
-
-        rv = self.get_howmistery_new_book(IsInit)
+        return ""
+        """
+        rv = "" self.get_howmistery_new_book(IsInit)
         if len(rv) != 0:
             if self.howmistery_title_author != rv:
                 text = "신간 소식이 있습니다.\n{}".format(rv)
                 self.howmistery_title_author = rv
                 ret = ret + text
 
-
-        """
             driver.switch_to_window(driver.window_handles[1])
             driver.find_element_by_xpath('//*[@id="content"]/section/div[3]/div/button').click()
             driver.find_element_by_xpath('//*[@id="wrap"]/div[2]/div/div/section/div/div/div/div[2]/div').send_keys("여기에 글을 적습니다.\n여러가지")

@@ -62,7 +62,8 @@ def get_new_message():
 
 
 def alarm_new_book():
-    send_message(c.query_new_book(driver))
+    #send_message(c.query_new_book(driver))
+    pass
 
 
 def alarm_weather():
