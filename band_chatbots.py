@@ -181,52 +181,22 @@ class ChatBot(object):
 
     def set_driver(self, adapter_web_driver):
         self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
-        self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
+        print("ChatBot Driver : ", adapter_web_driver)
+        # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
 
     def set_alarm(self):
-        # 새로고침
         schedule.every().day.at("06:30").do(refresh_browser)
         schedule.every().day.at("12:30").do(refresh_browser)
-        # 아침 날씨 브리핑
         schedule.every().day.at("07:30").do(briefing_weather)
-        # 끼니 인사
         schedule.every().day.at("08:00").do(show_static_message, "좋은 하루 보내세요~ ❤")
         schedule.every().day.at("12:00").do(show_static_message, "점심 맛있게 드세요~ ❤")
         schedule.every().day.at("18:00").do(show_static_message, "여유로운 저녁 보내세요~ ❤")
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
-
     def work(self):
-        print("ping")
+        print("Ping")
         schedule.run_pending()
         pass
-
-    def __str__(self):
-        return "This is ChatBot class : {}".format(self.init)
-
-    def register_callback_getdriver(self, func):
-        """
-            register get driver
-        :param func:
-        :return:
-        """
-        self.getdriver = func
-
-    def register_callback_refresh(self, func):
-        """
-            register refresh function
-        :param func:
-        :return:
-        """
-        self.refresh = func
-
-    def register_callback_sendmessage(self, func):
-        """
-            register callback function
-        :func       function for call back
-        :return:
-        """
-        self.sendmessage = func
 
     def query(self, text):
         """
