@@ -52,21 +52,6 @@ def get_driver():
 
     return driver
 
-def send_message(text):
-        Send Text to Browser
-        :param  text for send
-        :returns none
-
-    if len(text) > 0:
-        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(text)
-
-        if not text.endswith("\n"):
-            driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys("\n")
-    # no need click send-button
-    # text will send, if ends with "\n"
-    # driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[2]/div[2]/button').click()
-
-
 def get_new_message():
 
         Get New Text from Browser
@@ -82,22 +67,10 @@ def get_new_message():
         last_message = ""
         pass
     return last_message
-
-
-def alarm_new_book():
-    #send_message(c.query_new_book(driver))
-    pass
-
-
-def alarm_weather():
-    send_message(c.query_weather())
-
-
-def alarm_keywords():
-    send_message(c.query_keywords())
-
-
 """
+
+
+
 """
     global 
 """
@@ -157,6 +130,7 @@ class ChatBot(object):
         """
         self.driver = None
         self.set_alarm()
+        self.last_message = ""
 
         # self.init = True
         # self.sendmessage = None
@@ -194,11 +168,29 @@ class ChatBot(object):
         schedule.every().day.at("18:00").do(show_static_message, "여유로운 저녁 보내세요~ ❤")
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
-    def work(self):
+    def get_new_message(self):
+        if self.driver.current_window_handle != self.driver.window_handles[0]:
+            self.driver.switch_to.window(self.driver.window_handles[0])
 
+        last_message = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
+        if self.last_message != last_message:
+            self.last_message = last_message
+            return True
+        else:
+            return False
+
+    def work(self):
+        if self.get_new_message():
+            self.send_message(self.last_message)
 
         schedule.run_pending()
         pass
+
+    def send_message(self, text):
+        if type(text) == str and len(text) > 0:
+            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text)
+            if not text.endswith("\n"):
+                self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("\n")
 
     def query(self, text):
         """
