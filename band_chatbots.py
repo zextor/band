@@ -197,6 +197,7 @@ class ChatBot(object):
 
 
     def work(self):
+        print("ping")
         schedule.run_pending()
         pass
 
