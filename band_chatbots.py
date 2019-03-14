@@ -69,13 +69,14 @@ class ChatBot(object):
     """
         class for chat service
     """
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(ChatBot, cls).__new__(cls)
             print("Created ChatBot Instance", cls.instance)
         return cls.instance
 
-    @classmethod
+    @staticmethod
     def clear_instance(cls):
         if hasattr(cls, 'instance'):
             print("Deleted ChatBot Instance", cls.instance)
@@ -90,7 +91,8 @@ class ChatBot(object):
             for init class
         """
         print("INIT")
-        self.driver = None
+
+
         self.set_alarm()
         self.last_message = ""
 
@@ -114,13 +116,13 @@ class ChatBot(object):
         # temp = self.query_keywords()
         # temp = self.query_new_book(None)
 
-    def set_driver(self, adapter_web_driver):
-        self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
-
-        print("ChatBot Driver: ", self.driver)
-        print("TYPE: ", type(self.driver))
-        print("HANDLES: ", self.driver.window_handles)
-        # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
+    @classmethod
+    def set_driver(cls, adapter_web_driver):
+        cls.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
+        # print("ChatBot Driver: ", self.driver)
+        # print("TYPE: ", type(self.driver))
+        # print("HANDLES: ", self.driver.window_handles)
+        # # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
 
     def set_alarm(self):
         schedule.every().day.at("06:30").do(refresh_browser)
