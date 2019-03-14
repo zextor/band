@@ -138,7 +138,7 @@ class ChatBot(object):
 
         current_meesage = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
         if self.last_message != current_meesage:
-            print("MESSAGE CHANGED '{}'-'{}'".format(self.last_message, current_meesage))
+            # print("MESSAGE CHANGED '{}'-'{}'".format(self.last_message, current_meesage))
             self.last_message = current_meesage
             return True
         else:
