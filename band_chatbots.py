@@ -49,7 +49,7 @@ def get_pure_text(text):
 
 
 def refresh_browser():
-    print("Refreshed!")
+    print("REFRESH")
     c = ChatBot()
     c.refresh_browser()
     pass
@@ -60,6 +60,8 @@ def briefing_weather():
 
 
 def show_static_message(message):
+    c = ChatBot()
+    c.send_message(message)
     pass
 
 
@@ -170,7 +172,7 @@ class ChatBot(object):
             # self.BeforeUser = current_user_name
             # self.BeforeCmd = current_command
 
-            print("Message : {}".format(text))
+            print("MESSAGE : {}".format(text))
 
             isProcessed = True
 
@@ -298,10 +300,9 @@ class ChatBot(object):
 
             else:
                 isProcessed = False
-                print("{Bypass}")
 
             if isProcessed:
-                print("{Processed}")
+                print("MESSAGE_PROCESSED")
 
             return ""
         except:
