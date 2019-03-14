@@ -13,6 +13,7 @@ if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
     print("ChromeW Driver : ", driver)
+    input("Enter When Ready Chat Room")
 
     c = band_chatbots.ChatBot()
     c.set_driver(driver)
