@@ -13,6 +13,10 @@ if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
     print("ChromeW Driver : ", driver)
+
+    if pathlib.Path("update.now").is_file():
+        rename("update.now", "update.complete(change .now for reload)")
+
     input("Enter When Ready Chat Room")
 
     c = band_chatbots.ChatBot()
