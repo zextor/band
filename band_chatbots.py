@@ -90,12 +90,8 @@ class ChatBot(object):
         """
             for init class
         """
-        print("INIT")
-
-
         self.set_alarm()
         self.last_message = ""
-
         # self.init = True
         # self.refresh = None
         # self.getdriver = None
@@ -116,9 +112,8 @@ class ChatBot(object):
         # temp = self.query_keywords()
         # temp = self.query_new_book(None)
 
-    @classmethod
-    def set_driver(cls, adapter_web_driver):
-        cls.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
+    def set_driver(self, adapter_web_driver):
+        self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
         # print("ChatBot Driver: ", self.driver)
         # print("TYPE: ", type(self.driver))
         # print("HANDLES: ", self.driver.window_handles)
@@ -134,8 +129,6 @@ class ChatBot(object):
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
     def get_new_message(self):
-        print("TYPE: ", type(self.driver))
-        print("Driver: ", self.driver)
         if self.driver.current_window_handle != self.driver.window_handles[0]:
             self.driver.switch_to.window(self.driver.window_handles[0])
 

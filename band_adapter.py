@@ -13,8 +13,9 @@ if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
     print("ChromeW Driver : ", driver)
-    band_chatbots.ChatBot.set_driver(driver)
+
     c = band_chatbots.ChatBot()
+    c.set_driver(driver)
 
     while True:
 
@@ -27,6 +28,7 @@ if __name__ == '__main__':
                 importlib.reload(band_chatbots)
                 # 인스턴스 새로 생성
                 c = band_chatbots.ChatBot()
+                c.set_driver(driver)
                 # 파일이름 재설정
                 rename("update.now", "update.complete(change .now for reload)")
                 print("Module Reloaded!")
