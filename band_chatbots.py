@@ -76,7 +76,7 @@ class ChatBot(object):
             print("Created ChatBot Instance", cls.instance)
         return cls.instance
 
-    @staticmethod
+    @classmethod
     def clear_instance(cls):
         if hasattr(cls, 'instance'):
             print("Deleted ChatBot Instance", cls.instance)
