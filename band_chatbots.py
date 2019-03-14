@@ -303,7 +303,7 @@ class ChatBot(object):
             eq = result.group() == exp
             if eq:
                 answer = eval(exp)
-                return "{}".format(answer)
+                self.send_message("{}".format(answer))
 
         else:
             isProcessed = False
