@@ -1,7 +1,6 @@
 import band_chatbots
 from selenium import webdriver
 import time
-import pprint
 import pathlib
 import traceback
 import importlib
@@ -39,7 +38,7 @@ if __name__ == '__main__':
                 c.set_driver(driver)
                 # 파일이름 재설정
                 rename("update.now", "update.complete(change .now for reload)")
-                print("Module Reloaded!")
+                print("MODULE RELOADED")
 
             c.work()
 
@@ -50,6 +49,6 @@ if __name__ == '__main__':
             print("Terminate by user requests.")
             exit(1)
         except Exception:
+            print("------------{}-----------------".format(time.strftime("%Y-%m-%d %H:%M")))
             traceback.print_exc()
-            time.sleep(60)
-            pass
+            print("---------------------------------------------")
