@@ -115,7 +115,7 @@ class ChatBot(object):
     def set_driver(self, adapter_web_driver):
         self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
 
-        print("ChatBot Driver : ", self.driver)
+        print("ChatBot Driver: ", self.driver)
         print("TYPE: ", type(self.driver))
         print("HANDLES: ", self.driver.window_handles)
         # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')

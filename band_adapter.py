@@ -19,7 +19,6 @@ if __name__ == '__main__':
     while True:
 
         try:
-            c.work()
 
             if pathlib.Path("update.now").is_file():
                 # 인스턴스 제거
@@ -33,6 +32,8 @@ if __name__ == '__main__':
                 # 파일이름 재설정
                 rename("update.now", "update.complete(change .now for reload)")
                 print("Module Reloaded!")
+
+            c.work()
 
             # sleep interval 1 sec
             time.sleep(1)
