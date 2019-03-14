@@ -17,7 +17,9 @@ if __name__ == '__main__':
     if pathlib.Path("update.now").is_file():
         rename("update.now", "update.complete(change .now for reload)")
 
+    driver.get('https://band.us')
     input("Enter When Ready Chat Room")
+    driver.get('https://band.us/band/73188261/chat/CL1Vt8')
 
     c = band_chatbots.ChatBot()
     c.set_driver(driver)
