@@ -130,7 +130,7 @@ class ChatBot(object):
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
     def get_new_message(self):
-        print("TYPE: ", type(self.driver)
+        print("TYPE: ", type(self.driver))
         print("Driver: ", self.driver)
         if self.driver.current_window_handle != self.driver.window_handles[0]:
             self.driver.switch_to.window(self.driver.window_handles[0])
