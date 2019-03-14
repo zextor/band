@@ -3,6 +3,7 @@ import sys
 import html
 import json
 import lxml
+import time
 import pprint
 import pickle
 import pathlib
@@ -130,13 +131,16 @@ class ChatBot(object):
 
     def get_new_message(self):
         if self.driver.current_window_handle != self.driver.window_handles[0]:
+            print("CHANG WINDOW 0")
             self.driver.switch_to.window(self.driver.window_handles[0])
 
-        last_message = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
-        if self.last_message != last_message:
-            self.last_message = last_message
+        current_meesage = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_recieveMessage'})).text
+        if self.last_message != current_meesage:
+            print("MESSAGE CHANGED {}-{}", self.last_message, current_meesage)
+            self.last_message = current_meesage
             return True
         else:
+            print("MESSAGE NOT CHANGE")
             return False
 
     def work(self):
@@ -148,6 +152,7 @@ class ChatBot(object):
 
     def refresh_browser(self):
         self.driver.refresh()
+        time.sleep(5)
 
     def send_message(self, text):
         if type(text) == str and len(text) > 0:
@@ -161,160 +166,150 @@ class ChatBot(object):
         :param text:
         :return: text
         """
-        try:
-            pos1 = text.find(':')
-            pos2 = text.find(':', pos1 + 1)
-            current_user_name = text[pos1 + 2:pos2 - 1]
-            current_command = text[pos2 + 2:]
+        pos1 = text.find(':')
+        pos2 = text.find(':', pos1 + 1)
+        current_user_name = text[pos1 + 2:pos2 - 1]
+        current_command = text[pos2 + 2:]
 
-            # # 같은 메세지이면 패스
-            # if self.BeforeCmd == current_command and self.BeforeUser == current_user_name:
-            #     return ""
-            # self.BeforeUser = current_user_name
-            # self.BeforeCmd = current_command
+        # # 같은 메세지이면 패스
+        # if self.BeforeCmd == current_command and self.BeforeUser == current_user_name:
+        #     return ""
+        # self.BeforeUser = current_user_name
+        # self.BeforeCmd = current_command
 
-            print("MESSAGE : {}".format(text))
+        print("MESSAGE : {}".format(text))
 
-            isProcessed = True
+        isProcessed = True
 
-            # if self.active_wordchain:
-            #     token = get_pure_text(current_command)
-            #     if len(token) == 3:
-            #         if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
-            #             if self.wordchain_last_bot_answer[2] != token[0]:
-            #                 return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
-            #
-            #         if not self.is_word(token):
-            #             return "'{}' 는 사전에 없는 명사네요.".format(token)
-            #
-            #         if token in self.wordchain_all_answers:
-            #             return "'{}' 은/는 이미 사용한 명사에요!".format(token)
-            #
-            #         T = self.wordchain(token)
-            #         if len(T) == 0:
-            #             T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(current_user_name)
-            #             self.active_wordchain = False
-            #             self.wordchain_last_user_answer = ""
-            #             self.wordchain_last_bot_answer = ""
-            #             self.wordchain_all_answers.clear()
-            #         else:
-            #             self.wordchain_last_user_answer = token
-            #             self.wordchain_last_bot_answer = T
-            #             self.wordchain_all_answers.append(token)
-            #             self.wordchain_all_answers.append(T)
-            #         return T
+        # if self.active_wordchain:
+        #     token = get_pure_text(current_command)
+        #     if len(token) == 3:
+        #         if len(self.wordchain_last_bot_answer) != 0:                # 이전답의 잇기가 아니면
+        #             if self.wordchain_last_bot_answer[2] != token[0]:
+        #                 return "'{}' 끝말을 이어주세요.".format(self.wordchain_last_bot_answer[2])
+        #
+        #         if not self.is_word(token):
+        #             return "'{}' 는 사전에 없는 명사네요.".format(token)
+        #
+        #         if token in self.wordchain_all_answers:
+        #             return "'{}' 은/는 이미 사용한 명사에요!".format(token)
+        #
+        #         T = self.wordchain(token)
+        #         if len(T) == 0:
+        #             T = "제가 졌네요ㅠㅠ\n{}님이 이겼어요!".format(current_user_name)
+        #             self.active_wordchain = False
+        #             self.wordchain_last_user_answer = ""
+        #             self.wordchain_last_bot_answer = ""
+        #             self.wordchain_all_answers.clear()
+        #         else:
+        #             self.wordchain_last_user_answer = token
+        #             self.wordchain_last_bot_answer = T
+        #             self.wordchain_all_answers.append(token)
+        #             self.wordchain_all_answers.append(T)
+        #         return T
 
-            if current_command == "날씨":
-                print("{날씨}", end="")
-                ret = "{} 님 현재날씨입니다.\n{}".format(current_user_name, self.query_weather())
-                self.send_message(ret)
+        if current_command == "날씨":
+            print("{날씨}", end="")
+            ret = "{} 님 현재날씨입니다.\n{}".format(current_user_name, self.query_weather())
+            self.send_message(ret)
 
-            elif current_command == "캡쳐":
-                print("{캡쳐}", end="")
-                self.capture_screen()
+        elif current_command == "캡쳐":
+            print("{캡쳐}", end="")
+            self.capture_screen()
 
-            elif current_command == "누구":
-                print("{캡쳐}", end="")
-                self.call_member(current_user_name)
+        elif current_command == "누구":
+            print("{캡쳐}", end="")
+            self.call_member(current_user_name)
 
-            elif current_command == "뽀봇":
-                print("{핑퐁}", end="")
-                self.send_message("네! " + current_user_name + "님")
+        elif current_command == "뽀봇":
+            print("{핑퐁}", end="")
+            self.send_message("네! " + current_user_name + "님")
 
-            elif current_command == "빨리":
-                refresh_browser()
-                print("[call refresh_browser()]")
-                self.send_message("빨리!! 읏쌰읏쌰!!")
+        elif current_command == "빨리":
+            refresh_browser()
+            print("[call refresh_browser()]")
+            self.send_message("빨리!! 읏쌰읏쌰!!")
 
-            elif current_command in ["시청률", "시청율", "드라마", "예능"]:
-                print("{시청률}", end="")
-                l = self.query_tv_rating()
-                self.send_message(current_user_name + "님 실시간 시청율입니다.")
-                self.send_message(l)
+        elif current_command in ["시청률", "시청율", "드라마", "예능"]:
+            print("{시청률}", end="")
+            l = self.query_tv_rating()
+            self.send_message(current_user_name + "님 실시간 시청율입니다.")
+            self.send_message(l)
 
-            elif current_command.endswith(" 뜻"):
-                print("{사전}", end="")
-                Word = current_command[:-2]
-                T = self.get_dic(current_user_name, Word)
-                self.send_message(T)
+        elif current_command.endswith(" 뜻"):
+            print("{사전}", end="")
+            Word = current_command[:-2]
+            T = self.get_dic(current_user_name, Word)
+            self.send_message(T)
 
-            elif current_command.endswith(" 검색"):
-                print("{검색}", end="")
-                Word = current_command[:-3]
-                T = self.get_search(current_user_name, Word)
-                self.send_message(T)
+        elif current_command.endswith(" 검색"):
+            print("{검색}", end="")
+            Word = current_command[:-3]
+            T = self.get_search(current_user_name, Word)
+            self.send_message(T)
 
-            elif current_command.endswith(" 사진"):
-                print("{사진}", end="")
-                Word = current_command[:-3]
-                self.get_image(current_user_name, Word)
+        elif current_command.endswith(" 사진"):
+            print("{사진}", end="")
+            Word = current_command[:-3]
+            self.get_image(current_user_name, Word)
 
-            elif current_command.startswith("더보기"):
-                print(" {사전:더보기} ", end="")
-                Index = current_command[3:].strip()
-                try:
-                    ind = int(Index)
-                    if ind in range(1, 4):
-                        self.send_message(self.links[ind])
-                except:
-                    pass
+        elif current_command.startswith("더보기"):
+            print(" {사전:더보기} ", end="")
+            Index = current_command[3:].strip()
+            try:
+                ind = int(Index)
+                if ind in range(1, 4):
+                    self.send_message(self.links[ind])
+            except:
+                pass
 
-            elif current_command.endswith(" 책"):
-                print(" {도서} ", end="")
-                Book = current_command[:-2]
-                T = self.get_book(current_user_name, Book)
-                self.send_message(T)
+        elif current_command.endswith(" 책"):
+            print(" {도서} ", end="")
+            Book = current_command[:-2]
+            T = self.get_book(current_user_name, Book)
+            self.send_message(T)
 
-            elif current_command.endswith(" 책들"):
-                print(" {저자} ", end="")
-                author = current_command[:-3]
-                T = self.get_author(current_user_name, author)
-                self.send_message(T)
+        elif current_command.endswith(" 책들"):
+            print(" {저자} ", end="")
+            author = current_command[:-3]
+            T = self.get_author(current_user_name, author)
+            self.send_message(T)
 
-            elif current_command == "끝말잇기":
-                print("{끝말잇기}", end="")
-                if self.active_wordchain:
-                    print("{종료루틴}", end="")
-                    self.active_wordchain = False
-                    self.wordchain_last_user_answer = ""
-                    self.wordchain_last_bot_answer = ""
-                    self.wordchain_all_answers.clear()
-                    self.send_message("끝말잇기를 마칩니다 ^^")
-                else:
-                    print("{시작루틴}", end="")
-                    self.active_wordchain = True
-                    self.send_message("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
-
-            elif current_command.endswith("="):
-                math = current_command[:-1]
-                exp = math.strip()
-                exp = exp.replace("÷", "/")
-                exp = exp.replace("×", "*")
-                exp = exp.replace("{", "(")
-                exp = exp.replace("}", ")")
-                result = re.compile(r"^([-+/*.\(\)\d])*").match(exp)
-                g = result.group()
-                eq = result.group() == exp
-                if eq:
-                    answer = eval(exp)
-                    return "{}".format(answer)
-
+        elif current_command == "끝말잇기":
+            print("{끝말잇기}", end="")
+            if self.active_wordchain:
+                print("{종료루틴}", end="")
+                self.active_wordchain = False
+                self.wordchain_last_user_answer = ""
+                self.wordchain_last_bot_answer = ""
+                self.wordchain_all_answers.clear()
+                self.send_message("끝말잇기를 마칩니다 ^^")
             else:
-                isProcessed = False
+                print("{시작루틴}", end="")
+                self.active_wordchain = True
+                self.send_message("끝말잇기를 시작할께요.\n3자로 된 명사를 먼저 시작하세요!")
 
-            if isProcessed:
-                print("MESSAGE_PROCESSED")
+        elif current_command.endswith("="):
+            math = current_command[:-1]
+            exp = math.strip()
+            exp = exp.replace("÷", "/")
+            exp = exp.replace("×", "*")
+            exp = exp.replace("{", "(")
+            exp = exp.replace("}", ")")
+            result = re.compile(r"^([-+/*.\(\)\d])*").match(exp)
+            g = result.group()
+            eq = result.group() == exp
+            if eq:
+                answer = eval(exp)
+                return "{}".format(answer)
 
-            return ""
-        except:
-            exc_type, exc_obj, tb = sys.exc_info()
-            f = tb.tb_frame
-            lineno = tb.tb_lineno
-            filename = f.f_code.co_filename
-            linecache.checkcache(filename)
-            line = linecache.getline(filename, lineno, f.f_globals)
-            print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
-            print(traceback.print_exc())
+        else:
+            isProcessed = False
+
+        if isProcessed:
+            print("MESSAGE_PROCESSED")
+
+        return
 
     def query_new_book(self, IsInit):
         """
