@@ -77,8 +77,9 @@ class ChatBot(object):
 
     @classmethod
     def clear_instance(cls):
-        print("Deleted ChatBot Instance", cls.instance)
-        del cls.instance
+        if hasattr(cls, 'instance'):
+            print("Deleted ChatBot Instance", cls.instance)
+            del cls.instance
 
     # def clear_instance(cls):
     #     print("Deleted ChatBot Instance", cls.instance)
@@ -88,6 +89,7 @@ class ChatBot(object):
         """
             for init class
         """
+        print("INIT")
         self.driver = None
         self.set_alarm()
         self.last_message = ""
