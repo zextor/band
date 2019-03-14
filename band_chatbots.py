@@ -70,7 +70,17 @@ class ChatBot(object):
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(ChatBot, cls).__new__(cls)
+            print("Created ChatBot Instance", cls.instance)
         return cls.instance
+
+    @classmethod
+    def clear_instance(cls):
+        print("Deleted ChatBot Instance", cls.instance)
+        del cls.instance
+
+    # def clear_instance(cls):
+    #     print("Deleted ChatBot Instance", cls.instance)
+    #     del cls.instance
 
     def __init__(self):
         """

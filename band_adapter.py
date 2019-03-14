@@ -22,6 +22,8 @@ if __name__ == '__main__':
             c.work()
 
             if pathlib.Path("update.now").is_file():
+                # 인스턴스 제거
+                band_chatbots.ChatBot.clear_instance()
                 # 모듈 교체
                 importlib.reload(band_chatbots)
                 # 인스턴스 새로 생성
