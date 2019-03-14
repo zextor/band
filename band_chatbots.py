@@ -94,7 +94,6 @@ class ChatBot(object):
 
         print("INIT")
         self.set_alarm()
-        self.last_message = ""
         # self.init = True
         # self.refresh = None
         # self.getdriver = None
@@ -117,6 +116,7 @@ class ChatBot(object):
 
     def set_driver(self, adapter_web_driver):
         self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
+        self.last_message = ""
         # print("ChatBot Driver: ", self.driver)
         # print("TYPE: ", type(self.driver))
         # print("HANDLES: ", self.driver.window_handles)

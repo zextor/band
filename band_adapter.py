@@ -20,6 +20,7 @@ if __name__ == '__main__':
     driver.get('https://band.us')
     input("Enter When Ready Chat Room")
     driver.get('https://band.us/band/70571287/chat/CIExV-')
+    time.sleep(5)
 
     c = band_chatbots.ChatBot()
     c.set_driver(driver)
