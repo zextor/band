@@ -123,6 +123,7 @@ class ChatBot(object):
         # # self.driver.get('https://band.us/band/70571287/chat/CMpQqt')
 
     def set_alarm(self):
+        schedule.clear()
         schedule.every().day.at("06:30").do(refresh_browser)
         schedule.every().day.at("12:30").do(refresh_browser)
         schedule.every().day.at("07:30").do(briefing_weather)

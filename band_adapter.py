@@ -11,13 +11,13 @@ from os import rename
 if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
-    print("ChromeW Driver : ", driver)
+    print("CHROMEW DRIVER : ", driver)
 
     if pathlib.Path("update.now").is_file():
         rename("update.now", "update.complete(change .now for reload)")
 
     driver.get('https://band.us')
-    input("Enter When Ready Chat Room")
+    input("ENTER WHEN READY CHAT ROOM")
     driver.get('https://band.us/band/70571287/chat/CIExV-')
     time.sleep(5)
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             time.sleep(1)
 
         except KeyboardInterrupt:
-            print("Terminate by user requests.")
+            print("TERMINATE BY USER REQUESTS")
             exit(1)
         except Exception:
             print("------------{}-----------------".format(time.strftime("%Y-%m-%d %H:%M")))
