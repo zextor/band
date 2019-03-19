@@ -11,6 +11,7 @@ from os import rename
 if __name__ == '__main__':
 
     driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
+
     print("CHROMEW DRIVER : ", driver)
 
     if pathlib.Path("update.now").is_file():
@@ -52,3 +53,4 @@ if __name__ == '__main__':
             print("------------{}-----------------".format(time.strftime("%Y-%m-%d %H:%M")))
             traceback.print_exc()
             print("---------------------------------------------")
+            time.sleep(60)

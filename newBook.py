@@ -30,7 +30,7 @@ def get_aladin_point(title):
     "&SortOrder=5&CustReviewCount=0&CustReviewRank=0&KeyFullWord={}&KeyLastWord={}&CategorySearch=" \
     "&MViewType=".format(title, title, title)
 
-    point = "-"
+    point = "0"
 
     try:
         r = requests.get(url)
@@ -41,7 +41,6 @@ def get_aladin_point(title):
             sr = requests.get(book_url)
             ss = BeautifulSoup(sr.text, 'lxml')
             point = ss.find('li',{'class':'star_num'}).text
-
     except:
         pass
 
