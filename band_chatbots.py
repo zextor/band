@@ -269,8 +269,7 @@ class ChatBot(object):
         elif current_command.endswith(" 책"):
             print(" {도서} ", end="")
             Book = current_command[:-2]
-            T = self.get_book(current_user_name, Book)
-            self.send_message(T)
+            self.get_book(current_user_name, Book)
 
         elif current_command.endswith(" 책들"):
             print(" {저자} ", end="")
@@ -661,6 +660,22 @@ class ChatBot(object):
 
         return result_new
 
+    def download_image(self,img_url):
+        r = requests.get(img_url)
+        if r.status_code != 200:
+            return False
+
+        localfile = "c:\\zextor\\download_image.jpg"
+        if len(r.content) < 1024:  # 404 일 경우 취소함
+            return False
+
+        with open(localfile, "wb") as code:
+            code.write(r.content)
+
+        f = self.driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+        f.send_keys(localfile)
+        return True
+
 
     def get_book(self, User, Query):
 
@@ -685,7 +700,9 @@ class ChatBot(object):
             author = get_pure_text(p.findNext('author').text)
             Price = get_pure_text(p.findNext('price').text)
             desc = get_pure_text(p.findNext('description').text)
-            ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}\n{}".format(User, Query, title, author, Price, desc,image)
+            ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}".format(User, Query, title, author, Price, desc)
+            self.send_message(ret)
+            self.download_image(image)
             return ret
         return "{}님 검색결과가 없습니다.".format(User)
 
