@@ -43,7 +43,6 @@ def get_aladin_point(title):
             point = ss.find('li',{'class':'star_num'}).text
     except:
         pass
-
     return point
 
 def get_new_book():
@@ -62,8 +61,8 @@ def get_new_book():
         book_list.append(title)
     return book_list
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     book_list = get_new_book()
     for book in book_list:
         aladin_point = get_aladin_point(book.replace(',',' '))

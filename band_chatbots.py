@@ -677,10 +677,15 @@ class ChatBot(object):
         p = s.find('item')
         if p:
             title = get_pure_text(p.findNext('title').text)
+            pos = p.findNext('image').text.find('?')
+            if pos > 0:
+                image = p.findNext('image').text[:pos]
+            else:
+                image = p.findNext('image').text
             author = get_pure_text(p.findNext('author').text)
             Price = get_pure_text(p.findNext('price').text)
             desc = get_pure_text(p.findNext('description').text)
-            ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}".format(User, Query, title, author, Price, desc)
+            ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {}원\n{}\n{}".format(User, Query, title, author, Price, desc,image)
             return ret
         return "{}님 검색결과가 없습니다.".format(User)
 
