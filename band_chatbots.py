@@ -757,7 +757,7 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
         if len(t1) > 0:
-            self.send_message(t1.text)
+            self.send_message("변역 결과: {}".format(t1.text))
 
         return
 
