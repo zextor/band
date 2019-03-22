@@ -699,6 +699,8 @@ class ChatBot(object):
                 image = p.findNext('image').text
             author = get_pure_text(p.findNext('author').text)
             Price = get_pure_text(p.findNext('price').text)
+            if len(Price) < 1:
+                Price = "0"
             desc = get_pure_text(p.findNext('description').text)
             ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {:,}원\n{}".format(User, Query, title, author, int(Price), desc)
             self.send_message(ret)

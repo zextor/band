@@ -12,7 +12,7 @@ from os import rename
 
 
 c = band_chatbots.ChatBot()
-c.get_book("란뽀", "원년 봄의 제사, 루추자")
+c.get_book("란뽀", "도플갱어의 섬, 에도가와 란포")
 print(c.query("새로운 메세지 : 란뽀 : 얀 제거스 책들"))
 print(c.query("새로운 메세지 : 란뽀 : 기울기"))
 
