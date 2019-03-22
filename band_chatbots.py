@@ -159,9 +159,20 @@ class ChatBot(object):
 
     def send_message(self, text):
         if type(text) == str and len(text) > 0:
-            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text)
-            if not text.endswith("\n"):
-                self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("\n")
+            arr_text = text.split('\n')
+            arr_text2 = list(filter(None, arr_text))
+            count = len(arr_text2)
+            for text2 in arr_text2:
+                self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text2)
+                #print(text2)
+                count = count-1
+                if count is not 0:
+                    self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.LEFT_SHIFT, '\n')
+                    #print("shift enter")
+                else:
+                    self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys('\n')
+                    #print("enter")
+
 
     def query(self, text):
         """
