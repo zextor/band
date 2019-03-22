@@ -703,8 +703,10 @@ class ChatBot(object):
             ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {:,}원\n{}".format(User, Query, title, author, int(Price), desc)
             self.send_message(ret)
             self.download_image(image)
-            return ret
-        return "{}님 검색결과가 없습니다.".format(User)
+            return
+        else:
+            self.send_message("{}님 검색결과가 없습니다.".format(User))
+        return
 
 
     def get_author(self, User, author):
