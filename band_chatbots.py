@@ -256,6 +256,11 @@ class ChatBot(object):
             Word = current_command[:-3]
             self.get_image(current_user_name, Word)
 
+        elif current_command.endswith(" 번역"):
+            print("{번역}", end="")
+            word = current_command[:-3]
+            self.get_translate(word)
+
         elif current_command.startswith("더보기"):
             print(" {사전:더보기} ", end="")
             Index = current_command[3:].strip()
@@ -742,6 +747,19 @@ class ChatBot(object):
             return "CODE {} 발생".format(res.status_code)
 
         return ret
+
+    def get_translate(self, sentence):
+        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.get("https://translate.google.co.kr/#view=home&op=translate&sl=auto&tl=ko&text={}".format(sentence))
+        time.sleep(1)
+        s = BeautifulSoup(self.driver.page_source, 'lxml')
+        t1 = s.find('span', {'class': 'tlid-translation translation'})
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        time.sleep(1)
+        if len(t1) > 0:
+            self.send_message(t1.text)
+
+        return
 
     def get_image(self, User, Word):
         """
