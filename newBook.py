@@ -53,24 +53,28 @@ def get_aladin_point(title):
     return point
 
 def get_new_book():
-    r = requests.get("http://www.howmystery.com/index.php?mid=newrelease&listStyle=list")
-    s = BeautifulSoup(r.text, 'lxml')
-    items = s.findAll('tr')
+
     book_list = []
-    for item in items:
-        title = ""
-        try :
-            title = item.find('td',{'class':'title'}).find('a').text.replace('\n','').replace('\t','')
-        except:
-            continue
-        if title == "이곳은 '새책소식'입니다.":
-            continue
-        book_list.append(title)
+    for i in range(1,3):
+        r = requests.get("http://www.howmystery.com/index.php?mid=newrelease&listStyle=list&page={}".format(i))
+        s = BeautifulSoup(r.text, 'lxml')
+        items = s.findAll('tr')
+
+        for item in items:
+            title = ""
+            try :
+                title = item.find('td',{'class':'title'}).find('a').text.replace('\n','').replace('\t','')
+            except:
+                continue
+            if title == "이곳은 '새책소식'입니다.":
+                continue
+            book_list.append(title)
+
     return book_list
 
 
 if __name__ == '__main__':
-    get_translate()
+
     book_list = get_new_book()
     for book in book_list:
         aladin_point = get_aladin_point(book.replace(',',' '))
