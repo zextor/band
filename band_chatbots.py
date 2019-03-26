@@ -231,9 +231,9 @@ class ChatBot(object):
             print("{캡쳐}", end="")
             self.capture_screen()
 
-        elif current_command == "누구":
+        elif current_command == "공지":
             print("{캡쳐}", end="")
-            self.call_member(current_user_name)
+            self.call_member()
 
         elif current_command == "뽀봇":
             print("{핑퐁}", end="")
@@ -478,21 +478,16 @@ class ChatBot(object):
         '''
         return keywords
 
-    def call_member(self, user):
+    def call_member(self):
         """
             call members
         :return:
         """
-        driver = self.getdriver()
-        if driver is None:
-            return
+        for i in range(1,21):
+            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
+            sleep(0.1)
+            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
 
-        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys("@")
-        sleep(0.5)
-        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(user)
-        sleep(0.5)
-        driver.find_element_by_xpath('//*[@id="write_comment_view1287"]').send_keys(Keys.ENTER)
-        self.send_message("님!")
 
     def capture_screen(self):
         """
@@ -548,7 +543,7 @@ class ChatBot(object):
         r = "현재 날씨 입니다.\n"
 
 
-        r += "서울:{}{}°C,미세먼지 {}({})\n".format(l["서울"][1]['구름'],l["서울"][0]['온도'], self.alert(l["서울"][2]["미세먼지"]),l["서울"][2]["미세먼지"])
+        r += "서울:{}{}°C,미세먼지 {}({})\n".format(l["서울"][1]['구름'], l["서울"][0]['온도'], self.alert(l["서울"][2]["미세먼지"]),l["서울"][2]["미세먼지"])
         r += "경기:{}{}°C,미세먼지 {}({})\n".format(l["수원"][1]['구름'], l["수원"][0]['온도'], self.alert(l["수원"][2]["미세먼지"]), l["수원"][2]["미세먼지"])
         r += "강원:{}{}°C,미세먼지 {}({})\n".format(l["춘천"][1]['구름'], l["춘천"][0]['온도'], self.alert(l["춘천"][2]["미세먼지"]), l["춘천"][2]["미세먼지"])
         r += "대구:{}{}°C,미세먼지 {}({})\n".format(l["대구"][1]['구름'], l["대구"][0]['온도'], self.alert(l["대구"][2]["미세먼지"]), l["대구"][2]["미세먼지"])
