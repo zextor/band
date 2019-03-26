@@ -234,6 +234,7 @@ class ChatBot(object):
         elif current_command == "공지":
             print("{캡쳐}", end="")
             self.call_member()
+            self.send_message("\n공지사항이 있습니다!")
 
         elif current_command == "뽀봇":
             print("{핑퐁}", end="")
