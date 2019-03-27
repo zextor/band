@@ -807,19 +807,20 @@ class ChatBot(object):
 
 
     def get_translate_to_japan(self, sentence):
-        self.driver.switch_to.window(self.driver.window_handles[2])
+        #self.driver.switch_to.window(self.driver.window_handles[2])
         self.driver.get("https://translate.google.co.kr/#view=home&op=translate&sl=auto&tl=ja&text={}".format(sentence))
         time.sleep(1)
         s = BeautifulSoup(self.driver.page_source, 'lxml')
         t1 = s.find('span', {'class': 'tlid-translation translation'})
-        t2 = s.find('div',{'class':'tlid-transliteration-content transliteration-content full'})
+        t2 = s.findAll('div',{'class':'tlid-transliteration-content transliteration-content full'})
+
         if t2:
-            self.driver.switch_to.window(self.driver.window_handles[0])
+        #    self.driver.switch_to.window(self.driver.window_handles[0])
             time.sleep(1)
             if len(t1) > 0:
-                self.send_message(": {}\n발음: {}".format(t1.text, t2.text))
+                self.send_message(": {}\n: {}".format(t1.text, t2[len(t2)-1].text))
         else:
-            self.driver.switch_to.window(self.driver.window_handles[0])
+        #    self.driver.switch_to.window(self.driver.window_handles[0])
             time.sleep(1)
             if len(t1) > 0:
                 self.send_message(": {}".format(t1.text))
