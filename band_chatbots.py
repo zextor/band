@@ -273,6 +273,11 @@ class ChatBot(object):
             word = current_command[:-3]
             self.get_translate(word)
 
+        elif current_command.endswith(" 영작"):
+            print("{영작}", end="")
+            word = current_command[:-3]
+            self.get_translate_to_english(word)
+
         elif current_command.startswith("더보기"):
             print(" {사전:더보기} ", end="")
             Index = current_command[3:].strip()
@@ -764,9 +769,20 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
         if len(t1) > 0:
-            self.send_message("변역 결과: {}".format(t1.text))
+            self.send_message("변역: {}".format(t1.text))
 
         return
+
+    def get_translate_to_english(self, sentence):
+        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.get("https://translate.google.co.kr/#view=home&op=translate&sl=auto&tl=en&text={}".format(sentence))
+        time.sleep(1)
+        s = BeautifulSoup(self.driver.page_source, 'lxml')
+        t1 = s.find('span', {'class': 'tlid-translation translation'})
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        time.sleep(1)
+        if len(t1) > 0:
+            self.send_message("영작: {}".format(t1.text))
 
     def get_image(self, User, Word):
         """
