@@ -740,7 +740,7 @@ class ChatBot(object):
                 Price = "0"
             pubdate = get_pure_text(p.findNext('pubdate').text)
             desc = get_pure_text(p.findNext('description').text)
-            ret = "{} - {}\n가격: {:,}원, 출판: {}\n{}".format(title, author, int(Price), pubdate, desc)
+            ret = "{} \n- {}\n\n가격: {:,}원, 출판: {}\n\n{}".format(title, author, int(Price), pubdate, desc)
             self.send_message(ret)
             self.download_image(image)
             return
