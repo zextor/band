@@ -21,6 +21,20 @@ from selenium.webdriver.common.keys import Keys
     global 
 """
 
+HELP_MSG = '''
+아래의 명령을 사용할 수 있어요!
+"제목 책"
+"제목,지은이 책"
+"지은이 책들"
+"단어 뜻"
+"단어 검색"
+"단어 사진"
+"다른나라말 번역"
+"다른나라말 영작"
+"날씨"
+"시청률"
+'''
+
 HEADERS_NAVER_OPENAPI = {
     "X-Naver-Client-Id": "NoujfSLD2l81XduBvJ_n",
     "X-Naver-Client-Secret": "dmE5YkAMsv"}
@@ -238,7 +252,7 @@ class ChatBot(object):
 
         elif current_command == "뽀봇":
             print("{핑퐁}", end="")
-            self.send_message("네! " + current_user_name + "님")
+            self.send_message("네! " + current_user_name + "님\n"+HELP_MSG)
 
         elif current_command == "빨리":
             refresh_browser()
