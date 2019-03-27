@@ -33,6 +33,7 @@ HELP_MSG = '''
 "다른나라말 영작"
 "날씨"
 "시청률"
+"수식="
 '''
 
 HEADERS_NAVER_OPENAPI = {
@@ -291,6 +292,11 @@ class ChatBot(object):
             print("{영작}", end="")
             word = current_command[:-3]
             self.get_translate_to_english(word)
+
+        elif current_command.endswith(" 일작"):
+            print("{영작}", end="")
+            word = current_command[:-3]
+            self.get_translate_to_japan(word)
 
         elif current_command.startswith("더보기"):
             print(" {사전:더보기} ", end="")
@@ -783,7 +789,7 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
         if len(t1) > 0:
-            self.send_message("변역: {}".format(t1.text))
+            self.send_message(": {}".format(t1.text))
 
         return
 
@@ -796,7 +802,19 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[0])
         time.sleep(1)
         if len(t1) > 0:
-            self.send_message("영작: {}".format(t1.text))
+            self.send_message(": {}".format(t1.text))
+
+
+    def get_translate_to_japan(self, sentence):
+        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.get("https://translate.google.co.kr/#view=home&op=translate&sl=auto&tl=ja&text={}".format(sentence))
+        time.sleep(1)
+        s = BeautifulSoup(self.driver.page_source, 'lxml')
+        t1 = s.find('span', {'class': 'tlid-translation translation'})
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        time.sleep(1)
+        if len(t1) > 0:
+            self.send_message(": {}".format(t1.text))
 
     def get_image(self, User, Word):
         """
