@@ -10,9 +10,10 @@ from selenium import webdriver
 # except Exception:
 #     pass
 
-driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
+#driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
 c = band_chatbots.ChatBot()
-c.set_driver(driver)
+#c.set_driver(driver)
+c.get_book("r", "메이드인강남")
 c.get_translate_to_english("신기신기")
 c.send_message("test\n1234\nabcd\n")
 c.get_book("란뽀", "도플갱어의 섬, 에도가와 란포")
