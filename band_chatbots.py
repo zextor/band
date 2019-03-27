@@ -31,6 +31,7 @@ HELP_MSG = '''
 "단어 사진"
 "다른나라말 번역"
 "다른나라말 영작"
+"다른나라말 일작"
 "날씨"
 "시청률"
 "수식="
@@ -811,10 +812,17 @@ class ChatBot(object):
         time.sleep(1)
         s = BeautifulSoup(self.driver.page_source, 'lxml')
         t1 = s.find('span', {'class': 'tlid-translation translation'})
-        self.driver.switch_to.window(self.driver.window_handles[0])
-        time.sleep(1)
-        if len(t1) > 0:
-            self.send_message(": {}".format(t1.text))
+        t2 = s.find('div',{'class':'tlid-transliteration-content transliteration-content full'})
+        if t2:
+            self.driver.switch_to.window(self.driver.window_handles[0])
+            time.sleep(1)
+            if len(t1) > 0:
+                self.send_message(": {}\n발음: {}".format(t1.text, t2.text))
+        else:
+            self.driver.switch_to.window(self.driver.window_handles[0])
+            time.sleep(1)
+            if len(t1) > 0:
+                self.send_message(": {}".format(t1.text))
 
     def get_image(self, User, Word):
         """
