@@ -240,7 +240,7 @@ class ChatBot(object):
 
         if current_command == "날씨":
             print("{날씨}", end="")
-            ret = "{} 님 현재날씨입니다.\n{}".format(current_user_name, self.query_weather())
+            ret = "{}".format(self.query_weather())
             self.send_message(ret)
 
         elif current_command == "캡쳐":
@@ -264,7 +264,6 @@ class ChatBot(object):
         elif current_command in ["시청률", "시청율", "드라마", "예능"]:
             print("{시청률}", end="")
             l = self.query_tv_rating()
-            self.send_message(current_user_name + "님 실시간 시청율입니다.")
             self.send_message(l)
 
         elif current_command.endswith(" 뜻"):
@@ -740,7 +739,7 @@ class ChatBot(object):
             if len(Price) < 1:
                 Price = "0"
             desc = get_pure_text(p.findNext('description').text)
-            ret = "{}님 {} 검색결과입니다.\n{} - {}\n가격 {:,}원\n{}".format(User, Query, title, author, int(Price), desc)
+            ret = "{} - {}\n가격 {:,}원\n{}".format(title, author, int(Price), desc)
             self.send_message(ret)
             self.download_image(image)
             return
@@ -888,7 +887,7 @@ class ChatBot(object):
         data = json.loads(res.text)
 
         if data['display'] > 0:
-            Means = "{}님 {}의 검색결과 입니다.".format(User, Word)
+            Means = "{}의 검색결과 입니다.".format(Word)
             Index = 1
             for item in data['items']:
                 Text = item['description']
@@ -902,7 +901,7 @@ class ChatBot(object):
                     break
             return Means
         else:
-            return "{}님 검색결과가 없습니다.".format(User)
+            return "검색결과가 없습니다."
 
     def get_dic(self, User, Word):
         """
@@ -916,7 +915,7 @@ class ChatBot(object):
         r = requests.get(url)
         j = json.loads(r.text)
 
-        result = "{}님 '{}'의 사전 내용입니다.\n".format(User, Word)
+        result = "'{}'의 사전 내용입니다.\n".format(Word)
 
         found = False
         index = 1
@@ -938,7 +937,7 @@ class ChatBot(object):
         if found:
             return result
 
-        return "{}님 '{}'는 사전에 없습니다.".format(User, Word)
+        return "'{}'는 사전에 없습니다.".format(Word)
 
     def get_tv_rating(self):
         """
