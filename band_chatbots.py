@@ -7,6 +7,7 @@ import time
 import pprint
 import pickle
 import pathlib
+import datetime
 import requests
 import schedule
 import traceback
@@ -251,6 +252,10 @@ class ChatBot(object):
             print("{캡쳐}", end="")
             self.call_member()
             self.send_message("\n공지사항이 있습니다!")
+
+        elif current_command == '시간':
+            print("{시간}", end="")
+            self.print_time()
 
         elif current_command == "뽀봇":
             print("{핑퐁}", end="")
@@ -503,6 +508,14 @@ class ChatBot(object):
                     continue
         '''
         return keywords
+
+    def print_time(self):
+        c = datetime.datetime.now()
+        n = c + datetime.timedelta(hours=-13)
+        T1 = c.strftime('%Y/%m/%d %p %I:%M:%S').replace('AM','오전').replace('PM','오후')
+        T2 = n.strftime('%Y/%m/%d %p %I:%M:%S').replace('AM','오전').replace('PM','오후')
+        R = '한국: ' + T1 + '\n뉴욕: ' + T2
+        self.send_message(R)
 
     def call_member(self):
         """

@@ -2,13 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 
-def get_translate():
-    #url = "https://translate.google.co.kr/#view=home&op=translate&sl=auto&tl=ko&text={}".format("花嫁のさけび")
-    url = "https://translate.google.co.kr/translate_a/single?client=webapp&sl=auto&tl=ko&hl=ko&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&otf=2&ssel=5&tsel=5&kc=1&tk=407394.41535&q={}".format("花嫁のさけび")
-    r = requests.get(url)
-    s = BeautifulSoup(r.text, 'lxml')
-    print(s)
-
 def get_yes24_point(title):
     url = "http://www.yes24.com/searchcorner/Search?keywordAd=&keyword=&qdomain=%c0%fc%c3%bc&Wcode=001_0050&" \
             "query={}&domain=BOOK&" \

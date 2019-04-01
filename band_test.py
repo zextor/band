@@ -12,7 +12,9 @@ from selenium import webdriver
 
 #driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
 c = band_chatbots.ChatBot()
+c.print_time()
 #c.set_driver(driver)
+c.query_weather()
 c.get_book("r", "메이드인강남")
 c.get_translate_to_english("신기신기")
 c.send_message("test\n1234\nabcd\n")
