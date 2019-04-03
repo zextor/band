@@ -257,9 +257,9 @@ class ChatBot(object):
             print("{시간}", end="")
             self.print_time()
 
-        elif current_command == "뽀봇":
+        elif current_command in ["뽀봇", "란뽀"]:
             print("{핑퐁}", end="")
-            self.send_message("네! " + current_user_name + "님\n"+HELP_MSG)
+            self.send_message("네! " + current_user_name + "님\n\n"+HELP_MSG)
 
         elif current_command == "빨리":
             refresh_browser()
