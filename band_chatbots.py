@@ -74,6 +74,9 @@ def refresh_browser():
 
 
 def briefing_weather():
+    c = ChatBot()
+    ret = "{}".format(c.query_weather())
+    c.send_message(ret)
     pass
 
 
