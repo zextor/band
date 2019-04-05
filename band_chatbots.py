@@ -153,9 +153,9 @@ class ChatBot(object):
         schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
     def get_new_message(self):
-        if self.driver.current_window_handle != self.driver.window_handles[0]:
-            print("CHANG WINDOW 0")
-            self.driver.switch_to.window(self.driver.window_handles[0])
+        # if self.driver.current_window_handle != self.driver.window_handles[0]:
+        #     print("CHANG WINDOW 0")
+        #     self.driver.switch_to.window(self.driver.window_handles[0])
 
         current_message = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_receivedMessage'})).text
         if self.last_message != current_message:
