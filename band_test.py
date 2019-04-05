@@ -10,7 +10,7 @@ from selenium import webdriver
 # except Exception:
 #     pass
 
-#driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
+driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
 c = band_chatbots.ChatBot()
 c.print_time()
 #c.set_driver(driver)

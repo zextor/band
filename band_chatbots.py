@@ -157,6 +157,10 @@ class ChatBot(object):
         #     print("CHANG WINDOW 0")
         #     self.driver.switch_to.window(self.driver.window_handles[0])
         print(self.driver.window_handles)
+        print(self.driver.current_window_handle)
+        print(self.driver.current_url)
+        self.driver.switch_to.window(self.driver.window_handles[0])
+
 
         current_message = (BeautifulSoup(self.driver.page_source, 'html.parser').find('div', {'class': '_receivedMessage'})).text
         if self.last_message != current_message:
