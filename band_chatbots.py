@@ -156,9 +156,9 @@ class ChatBot(object):
         # if self.driver.current_window_handle != self.driver.window_handles[0]:
         #     print("CHANG WINDOW 0")
         #     self.driver.switch_to.window(self.driver.window_handles[0])
-        print(self.driver.window_handles)
-        print(self.driver.current_window_handle)
-        print(self.driver.current_url)
+        # print(self.driver.window_handles)
+        # print(self.driver.current_window_handle)
+        # print(self.driver.current_url)
         self.driver.switch_to.window(self.driver.window_handles[0])
 
 
