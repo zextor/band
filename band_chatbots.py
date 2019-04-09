@@ -188,14 +188,17 @@ class ChatBot(object):
             arr_text2 = list(filter(None, arr_text))
             count = len(arr_text2)
             for text2 in arr_text2:
-                self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text2)
+                self.driver.find_element_by_xpath('//textarea[1]').send_keys(text2)
+                # self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(text2)
                 #print(text2)
                 count = count-1
                 if count is not 0:
-                    self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.LEFT_SHIFT, '\n')
+                    self.driver.find_element_by_xpath('//textarea[1]').send_keys(Keys.LEFT_SHIFT, '\n')
+                    #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.LEFT_SHIFT, '\n')
                     #print("shift enter")
                 else:
-                    self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys('\n')
+                    self.driver.find_element_by_xpath('//textarea[1]').send_keys('\n')
+                    #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys('\n')
                     #print("enter")
 
 
@@ -531,9 +534,11 @@ class ChatBot(object):
         :return:
         """
         for i in range(1,21):
-            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
+            self.driver.find_element_by_xpath('//textarea[1]').send_keys("@")
+            #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
             sleep(0.1)
-            self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
+            self.driver.find_element_by_xpath('//textarea[1]').send_keys(Keys.ENTER)
+            #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys(Keys.ENTER)
 
 
     def capture_screen(self):
