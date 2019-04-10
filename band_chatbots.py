@@ -533,7 +533,7 @@ class ChatBot(object):
             call members
         :return:
         """
-        for i in range(1,21):
+        for i in range(1,34):
             self.driver.find_element_by_xpath('//textarea[1]').send_keys("@")
             #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
             sleep(0.1)
