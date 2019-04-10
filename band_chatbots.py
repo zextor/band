@@ -546,13 +546,13 @@ class ChatBot(object):
             capture browser screen
         :return:
         """
-        driver = self.getdriver()
-        if driver is None:
-            return
+        # driver = self.getdriver()
+        # if driver is None:
+        #     return
 
-        driver.save_screenshot("c:\\zextor\\screenshot.png")
+        self.driver.save_screenshot("c:\\zextor\\screenshot.png")
         if pathlib.Path("c:\\zextor\\screenshot.png").is_file():
-            f = driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+            f = self.driver.find_element_by_xpath('//input[1]')
             f.send_keys("c:\\zextor\\screenshot.png")
 
     def get_kyobo_new_book(self):
@@ -735,7 +735,7 @@ class ChatBot(object):
         with open(localfile, "wb") as code:
             code.write(r.content)
 
-        f = self.driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+        f = self.driver.find_element_by_xpath('//input[1]')
         f.send_keys(localfile)
         return True
 
