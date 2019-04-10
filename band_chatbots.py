@@ -884,7 +884,7 @@ class ChatBot(object):
                     code.write(r.content)
 
                 self.driver.switch_to_window(self.driver.window_handles[0])
-                f = self.driver.find_element_by_xpath('//*[@id="wrap"]/div[3]/div/div/div[1]/ul/li[2]/label/input')
+                f = self.driver.find_element_by_xpath('//input[1]')
                 f.send_keys(localfile)
                 # 파일 전송시 에러가 나면 alert이 뜰 때까지 시간이 소요된다
                 # 따라서 그 전에 switch_to_alert 를 호출하면 예외가 발생하므로
