@@ -17,16 +17,17 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import re
 
 """
     global 
 """
 
 HELP_MSG = '''
-아래의 명령을 사용할 수 있어요!
+아래의 명령을 사용할 수 있어요!\n \n
 "제목 책"
-"제목,지은이 책"
-"지은이 책들"
+"제목,저자 책"
+"저자 책들"
 "단어 뜻"
 "단어 검색"
 "단어 사진"
@@ -260,7 +261,7 @@ class ChatBot(object):
         elif current_command == "공지":
             print("{캡쳐}", end="")
             self.call_member()
-            self.send_message("\n공지사항이 있습니다!")
+            self.send_message("\n \n{} 님께서 공지사항을 전달합니다.".format(current_user_name))
 
         elif current_command == '시간':
             print("{시간}", end="")
@@ -531,7 +532,10 @@ class ChatBot(object):
             call members
         :return:
         """
-        for i in range(1,34):
+        title = self.driver.find_elements_by_class_name('_titleBig')[0].text
+        maxv = int((re.findall('\(\d+\)', title)[0]).replace('(', '').replace(')', ''))
+
+        for i in range(1,maxv):
             self.driver.find_element_by_xpath('//textarea[1]').send_keys("@")
             #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys("@")
             sleep(0.1)
