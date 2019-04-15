@@ -608,7 +608,11 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[2])
         self.driver.get("https://earth.nullschool.net/#current/particulates/surface/level/overlay=pm10/orthographic=-233.65,36.03,1247")
         sleep(1)
-        self.capture_screen()
+        self.driver.save_screenshot("c:\\zextor\\screenshot.png")
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        if pathlib.Path("c:\\zextor\\screenshot.png").is_file():
+            f = self.driver.find_element_by_xpath('//input[1]')
+            f.send_keys("c:\\zextor\\screenshot.png")
         return
 
     @property
