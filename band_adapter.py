@@ -5,8 +5,14 @@ import pathlib
 import traceback
 import importlib
 from os import rename
+from os import getpid
+import ctypes
+
 # from selenium.webdriver.common.keys import Keys
 
+UPDATE_FILENAME_COMPLETE = "update_{}.complete (change .now for reload)".format(getpid())
+UPDATE_FILENAME_NOW = "update_{}.now".format(getpid())
+ctypes.windll.kernel32.SetConsoleTitleW(UPDATE_FILENAME_NOW)
 
 if __name__ == '__main__':
 
@@ -14,8 +20,11 @@ if __name__ == '__main__':
 
     print("CHROMEW DRIVER : ", driver)
 
-    if pathlib.Path("update.now").is_file():
-        rename("update.now", "update.complete(change .now for reload)")
+    if pathlib.Path(UPDATE_FILENAME_NOW).is_file():
+        rename(UPDATE_FILENAME_NOW, UPDATE_FILENAME_COMPLETE)
+
+    if not pathlib.Path(UPDATE_FILENAME_COMPLETE).is_file():
+        open(UPDATE_FILENAME_COMPLETE, 'a').close()
 
     driver.get('https://band.us')
     input("ENTER WHEN READY CHAT ROOM")
@@ -29,7 +38,7 @@ if __name__ == '__main__':
 
         try:
 
-            if pathlib.Path("update.now").is_file():
+            if pathlib.Path(UPDATE_FILENAME_NOW).is_file():
                 # 인스턴스 제거
                 band_chatbots.ChatBot.clear_instance()
                 # 모듈 교체
@@ -38,7 +47,7 @@ if __name__ == '__main__':
                 c = band_chatbots.ChatBot()
                 c.set_driver(driver)
                 # 파일이름 재설정
-                rename("update.now", "update.complete(change .now for reload)")
+                rename(UPDATE_FILENAME_NOW, UPDATE_FILENAME_COMPLETE)
                 print("MODULE RELOADED")
 
             c.work()
