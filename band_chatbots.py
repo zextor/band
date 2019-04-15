@@ -75,8 +75,7 @@ def refresh_browser():
 
 def briefing_weather():
     c = ChatBot()
-    ret = "{}".format(c.query_weather())
-    c.send_message(ret)
+    c.query_weather()
     pass
 
 
@@ -252,8 +251,7 @@ class ChatBot(object):
 
         if current_command == "날씨":
             print("{날씨}", end="")
-            ret = "{}".format(self.query_weather())
-            self.send_message(ret)
+            self.query_weather()
 
         elif current_command == "캡쳐":
             print("{캡쳐}", end="")
@@ -586,23 +584,32 @@ class ChatBot(object):
             return "보통"
         return "좋음"
 
+
+    def dust(self):
+        T = ""
+
+
     def query_weather(self):
         """
             return text about weather
         :return:
         """
-        l = self.get_weather_from_naver();
-        r = "현재 날씨 입니다.\n"
+        l = self.get_weather_from_naver()
+        r = "현재 날씨 입니다.\n \n"
 
+        r += "서울: {}{}°c, 미세 {}({})\n".format(l["서울"][1]['구름'], l["서울"][0]['온도'], self.alert(l["서울"][2]["미세먼지"]),l["서울"][2]["미세먼지"])
+        r += "경기: {}{}°c, 미세 {}({})\n".format(l["수원"][1]['구름'], l["수원"][0]['온도'], self.alert(l["수원"][2]["미세먼지"]), l["수원"][2]["미세먼지"])
+        r += "강원: {}{}°c, 미세 {}({})\n".format(l["춘천"][1]['구름'], l["춘천"][0]['온도'], self.alert(l["춘천"][2]["미세먼지"]), l["춘천"][2]["미세먼지"])
+        r += "대구: {}{}°c, 미세 {}({})\n".format(l["대구"][1]['구름'], l["대구"][0]['온도'], self.alert(l["대구"][2]["미세먼지"]), l["대구"][2]["미세먼지"])
+        r += "광주: {}{}°c, 미세 {}({})\n".format(l["목포"][1]['구름'], l["목포"][0]['온도'], self.alert(l["목포"][2]["미세먼지"]), l["목포"][2]["미세먼지"])
+        r += "부산: {}{}°c, 미세 {}({})\n".format(l["부산"][1]['구름'], l["부산"][0]['온도'], self.alert(l["부산"][2]["미세먼지"]), l["부산"][2]["미세먼지"])
 
-        r += "서울:{}{}°C,미세먼지 {}({})\n".format(l["서울"][1]['구름'], l["서울"][0]['온도'], self.alert(l["서울"][2]["미세먼지"]),l["서울"][2]["미세먼지"])
-        r += "경기:{}{}°C,미세먼지 {}({})\n".format(l["수원"][1]['구름'], l["수원"][0]['온도'], self.alert(l["수원"][2]["미세먼지"]), l["수원"][2]["미세먼지"])
-        r += "강원:{}{}°C,미세먼지 {}({})\n".format(l["춘천"][1]['구름'], l["춘천"][0]['온도'], self.alert(l["춘천"][2]["미세먼지"]), l["춘천"][2]["미세먼지"])
-        r += "대구:{}{}°C,미세먼지 {}({})\n".format(l["대구"][1]['구름'], l["대구"][0]['온도'], self.alert(l["대구"][2]["미세먼지"]), l["대구"][2]["미세먼지"])
-        r += "광주:{}{}°C,미세먼지 {}({})\n".format(l["목포"][1]['구름'], l["목포"][0]['온도'], self.alert(l["목포"][2]["미세먼지"]), l["목포"][2]["미세먼지"])
-        r += "부산:{}{}°C,미세먼지 {}({})\n".format(l["부산"][1]['구름'], l["부산"][0]['온도'], self.alert(l["부산"][2]["미세먼지"]), l["부산"][2]["미세먼지"])
-
-        return r
+        self.send_message(r)
+        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.get("https://earth.nullschool.net/#current/particulates/surface/level/overlay=pm10/orthographic=-233.65,36.03,1247")
+        sleep(1)
+        self.capture_screen()
+        return
 
     @property
     def get_keywords(self):
