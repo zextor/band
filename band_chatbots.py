@@ -213,8 +213,6 @@ class ChatBot(object):
         current_user_name = text[pos1 + 2:pos2 - 1]
         current_command = text[pos2 + 2:]
 
-        if current_user_name is '김전일(부산)':
-            return
 
         # # 같은 메세지이면 패스
         # if self.BeforeCmd == current_command and self.BeforeUser == current_user_name:
