@@ -137,6 +137,7 @@ class ChatBot(object):
     def set_driver(self, adapter_web_driver):
         self.driver = adapter_web_driver  # 어댑터에서 전달받은 웹드라이버):
         self.last_message = ""
+        self.statistics = { '뽀봇' : 0 }
         # print("ChatBot Driver: ", self.driver)
         # print("TYPE: ", type(self.driver))
         # print("HANDLES: ", self.driver.window_handles)
@@ -222,6 +223,11 @@ class ChatBot(object):
 
         print("MESSAGE : {}".format(text))
 
+        if current_user_name in self.statistics:
+            self.statistics[current_user_name] += 1
+        else:
+            self.statistics[current_user_name] = 1
+
         is_processed = True
 
         # if self.active_wordchain:
@@ -254,6 +260,10 @@ class ChatBot(object):
         if current_command == "날씨":
             print("{날씨}", end="")
             self.query_weather()
+
+        elif current_command == "통계":
+            print("{통계}", end="")
+            self.send_message(self.statistics.__str__())
 
         elif current_command == "캡쳐":
             print("{캡쳐}", end="")
