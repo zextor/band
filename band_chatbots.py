@@ -18,7 +18,7 @@ from urllib.parse import urlparse, parse_qs
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import re
-
+import clipboard
 """
     global 
 """
@@ -185,6 +185,12 @@ class ChatBot(object):
 
     def send_message(self, text):
         if type(text) == str and len(text) > 0:
+            clipboard.copy(text)
+            self.driver.find_element_by_xpath('//textarea[1]').send_keys(Keys.LEFT_CONTROL, 'v')
+            self.driver.find_element_by_xpath('//textarea[1]').send_keys('\n')
+
+
+            '''
             arr_text = text.split('\n')
             arr_text2 = list(filter(None, arr_text))
             count = len(arr_text2)
@@ -201,6 +207,7 @@ class ChatBot(object):
                     self.driver.find_element_by_xpath('//textarea[1]').send_keys('\n')
                     #self.driver.find_element_by_xpath('//*[@id="write_comment_view81"]').send_keys('\n')
                     #print("enter")
+            '''
 
 
     def query(self, text):
