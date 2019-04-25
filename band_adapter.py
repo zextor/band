@@ -53,7 +53,7 @@ if __name__ == '__main__':
             c.work()
 
             # sleep interval 1 sec
-            time.sleep(1)
+            time.sleep(0.42)
 
         except KeyboardInterrupt:
             print("TERMINATE BY USER REQUESTS")

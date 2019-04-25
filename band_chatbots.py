@@ -270,6 +270,7 @@ class ChatBot(object):
 
         elif current_command == "통계":
             print("{통계}", end="")
+            self.statistics.pop('뽀봇')
             self.send_message(self.statistics.__str__())
 
         elif current_command == "캡쳐":
