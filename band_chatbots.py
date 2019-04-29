@@ -24,7 +24,8 @@ import clipboard
 """
 
 HELP_MSG = '''
-아래의 명령을 사용할 수 있어요!\n \n
+아래의 명령을 사용할 수 있어요!
+
 "제목 책"
 "제목,저자 책"
 "저자 책들"
@@ -270,7 +271,8 @@ class ChatBot(object):
 
         elif current_command == "통계":
             print("{통계}", end="")
-            self.statistics.pop('뽀봇')
+            if '뽀봇' in self.statistics:
+                self.statistics.pop('뽀봇')
             self.send_message(self.statistics.__str__())
 
         elif current_command == "캡쳐":
