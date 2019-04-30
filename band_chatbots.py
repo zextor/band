@@ -19,12 +19,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import re
 import clipboard
+from operator import itemgetter
 """
     global 
 """
 
-HELP_MSG = '''
-아래의 명령을 사용할 수 있어요!
+HELP_MSG = '''아래의 명령을 사용할 수 있어요!
 
 "제목 책"
 "제목,저자 책"
@@ -273,7 +273,14 @@ class ChatBot(object):
             print("{통계}", end="")
             if '뽀봇' in self.statistics:
                 self.statistics.pop('뽀봇')
-            self.send_message(self.statistics.__str__())
+
+            ranking = 1
+            r = ""
+            for key, value in sorted(self.statistics.items(), key=itemgetter(1), reverse=True):
+                r = r + "\n" + "{}. {} ({})".format(ranking, key, value)
+                ranking = ranking + 1
+
+            self.send_message( r )
 
         elif current_command == "캡쳐":
             print("{캡쳐}", end="")
