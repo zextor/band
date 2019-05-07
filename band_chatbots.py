@@ -326,6 +326,11 @@ class ChatBot(object):
             Word = current_command[:-3]
             self.get_image(current_user_name, Word)
 
+        elif current_command.endswith(" 음악") or current_command.endswith(" 동영상"):
+            print("{음악}", end="")
+            Word = current_command[:-3]
+            self.get_movie(current_user_name, Word)
+
         elif current_command.endswith(" 번역"):
             print("{번역}", end="")
             word = current_command[:-3]
@@ -893,6 +898,24 @@ class ChatBot(object):
             time.sleep(1)
             if len(t1) > 0:
                 self.send_message(": {}".format(t1.text))
+
+    def get_movie(self, User, Word):
+        """
+            movie
+        :param User:
+        :param Word:
+        :return:
+        """
+        self.driver.switch_to.window(self.driver.window_handles[2])
+        self.driver.get("https://www.google.com/search?q={}&newwindow=1&hl=ko&source=lnms&tbm=vid&sa=X&ved=0ahUKEwjjz-qZ0ojiAhVIebwKHf__AgcQ_AUIDigB&cshid=1557205529517621&biw=1106&bih=872".format(Word))
+
+        xpath = '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a/div/cite'
+        c = self.driver.find_element_by_xpath(xpath)
+
+        self.driver.switch_to_window(self.driver.window_handles[0])
+        f = self.driver.find_element_by_xpath('//input[1]')
+        f.send_keys(c.text)
+
 
     def get_image(self, User, Word):
         """

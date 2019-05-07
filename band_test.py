@@ -13,7 +13,7 @@ from selenium import webdriver
 driver = webdriver.Chrome('C:\\zextor\\chromedriver.exe')
 c = band_chatbots.ChatBot()
 c.set_driver(driver)
-c.query("새로운 메세지 : 란뽀 : 란뽀 사진")
+c.query("새로운 메세지 : 란뽀 : 먼데이키즈 bye bye bye 음악")
 
 #c.print_time()
 #c.query_weather()
