@@ -149,10 +149,10 @@ class ChatBot(object):
         schedule.every().day.at("06:30").do(refresh_browser)
         schedule.every().day.at("12:30").do(refresh_browser)
         schedule.every().day.at("07:30").do(briefing_weather)
-        schedule.every().day.at("08:00").do(show_static_message, "좋은 하루 보내세요~ ❤")
-        schedule.every().day.at("12:00").do(show_static_message, "점심 맛있게 드세요~ ❤")
-        schedule.every().day.at("18:00").do(show_static_message, "여유로운 저녁 보내세요~ ❤")
-        schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
+        #schedule.every().day.at("08:00").do(show_static_message, "좋은 하루 보내세요~ ❤")
+        #schedule.every().day.at("12:00").do(show_static_message, "점심 맛있게 드세요~ ❤")
+        #schedule.every().day.at("18:00").do(show_static_message, "여유로운 저녁 보내세요~ ❤")
+        #schedule.every().day.at("23:00").do(show_static_message, "고운밤 되세요~ ❤")
 
     def get_new_message(self):
         # if self.driver.current_window_handle != self.driver.window_handles[0]:
