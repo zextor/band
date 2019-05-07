@@ -190,7 +190,6 @@ class ChatBot(object):
             self.driver.find_element_by_xpath('//textarea[1]').send_keys(Keys.LEFT_CONTROL, 'v')
             self.driver.find_element_by_xpath('//textarea[1]').send_keys('\n')
 
-
             '''
             arr_text = text.split('\n')
             arr_text2 = list(filter(None, arr_text))
@@ -909,12 +908,13 @@ class ChatBot(object):
         self.driver.switch_to.window(self.driver.window_handles[2])
         self.driver.get("https://www.google.com/search?q={}&newwindow=1&hl=ko&source=lnms&tbm=vid&sa=X&ved=0ahUKEwjjz-qZ0ojiAhVIebwKHf__AgcQ_AUIDigB&cshid=1557205529517621&biw=1106&bih=872".format(Word))
 
+        sleep(0.5)
         xpath = '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a/div/cite'
         c = self.driver.find_element_by_xpath(xpath)
-
+        text = c.text
         self.driver.switch_to_window(self.driver.window_handles[0])
-        sleep(0.2)
-        self.send_message(c.text)
+        sleep(0.5)
+        self.send_message(text)
 
 
 
