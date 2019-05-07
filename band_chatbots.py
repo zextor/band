@@ -913,8 +913,9 @@ class ChatBot(object):
         c = self.driver.find_element_by_xpath(xpath)
 
         self.driver.switch_to_window(self.driver.window_handles[0])
-        f = self.driver.find_element_by_xpath('//input[1]')
-        f.send_keys(c.text)
+        sleep(0.2)
+        self.send_message(c.text)
+
 
 
     def get_image(self, User, Word):
