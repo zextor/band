@@ -148,8 +148,8 @@ class ChatBot(object):
 
     def set_alarm(self):
         schedule.clear()
-        schedule.every().day.at("06:30").do(refresh_browser)
-        schedule.every().day.at("12:30").do(refresh_browser)
+        #schedule.every().day.at("06:30").do(refresh_browser)
+        #schedule.every().day.at("12:30").do(refresh_browser)
         schedule.every().day.at("07:30").do(briefing_weather)
         #schedule.every().day.at("08:00").do(show_static_message, "좋은 하루 보내세요~ ❤")
         #schedule.every().day.at("12:00").do(show_static_message, "점심 맛있게 드세요~ ❤")
